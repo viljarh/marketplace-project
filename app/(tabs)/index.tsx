@@ -1,20 +1,5 @@
-import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import {
-  BellIcon,
-  MagnifyingGlassIcon,
-  HomeIcon,
-  HeartIcon,
-  PlusCircleIcon,
-  UserIcon,
-  ChatBubbleBottomCenterTextIcon,
-} from "react-native-heroicons/outline";
+import { SafeAreaView, ScrollView, Text, TextInput, View } from "react-native";
+import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
 
 export default function Index() {
   return (
@@ -57,24 +42,6 @@ export default function Index() {
           </View>
         ))}
       </ScrollView>
-
-      <View className="flex-row justify-around items-center py-4 bg-white border-t border-gray-100">
-        <TouchableOpacity>
-          <HomeIcon size={24} color="gray" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <HeartIcon size={24} color="gray" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <PlusCircleIcon size={36} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <ChatBubbleBottomCenterTextIcon size={24} color="gray" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <UserIcon size={24} color="gray" />
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 }

@@ -1,9 +1,9 @@
 import { SafeAreaView, Text } from "react-native";
 
-export default function FavoritesScreen() {
+export default function MessagesScreen() {
   return (
     <SafeAreaView>
-      <Text>Favorites Screen</Text>
+      <Text>Messages screen</Text>
     </SafeAreaView>
   );
 }
