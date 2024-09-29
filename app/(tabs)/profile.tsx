@@ -22,7 +22,7 @@ export default function ProfileScreen() {
 
       <ScrollView className="flex-1">
         <View className="flex items-center my-6">
-          <UserCircleIcon size={64} color="gray" />
+          <UserCircleIcon size={64} color="#3A82F6" />
           <Text className="text-lg font-semibold mt-2">Viljar Hoem-Olsen</Text>
           <Text className="text-gray-500">viljar.hoem.olsen@gmail.com </Text>
         </View>

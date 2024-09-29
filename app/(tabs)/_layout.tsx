@@ -28,7 +28,7 @@ const TabLayout = () => {
           tabBarIcon: ({ color }) => <HomeIcon size={24} color={color} />,
         }}
       />
-      {/* Favorites Tab */}
+
       <Tabs.Screen
         name="favorites"
         options={{
@@ -40,42 +40,40 @@ const TabLayout = () => {
         }}
       />
 
-      {/* Create Tab */}
       <Tabs.Screen
         name="create"
         options={{
-          tabBarLabel: "", // Empty label to prevent text below
-          tabBarIcon: ({ color }) => (
+          tabBarLabel: "",
+          tabBarIcon: () => (
             <View
               style={{
                 width: 60,
                 height: 60,
-                backgroundColor: "#f4f4f4", // Customize your background color here
-                borderRadius: 30, // Make it circular
+                backgroundColor: "#3A82F6",
+                borderRadius: 20,
                 justifyContent: "center",
                 alignItems: "center",
                 shadowColor: "#000",
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.3,
                 shadowRadius: 5,
-                elevation: 5, // Android shadow
+                elevation: 5,
               }}
             >
-              <PlusCircleIcon size={36} color={color} />
+              <PlusCircleIcon size={36} color="white" />
             </View>
           ),
           tabBarButton: (props) => (
             <TouchableOpacity
               {...props}
               style={{
-                top: -10, // Adjust the vertical positioning of the button
+                top: -10,
               }}
             />
           ),
         }}
       />
 
-      {/* Messages Tab */}
       <Tabs.Screen
         name="messages"
         options={{
@@ -89,7 +87,6 @@ const TabLayout = () => {
         }}
       />
 
-      {/* Profile Tab */}
       <Tabs.Screen
         name="profile"
         options={{

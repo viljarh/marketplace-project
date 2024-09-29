@@ -8,8 +8,10 @@ export default function CreateScreen() {
       </View>
 
       <ScrollView
-        className="flex-1"
-        contentContainerStyle={{ paddingHorizontal: 16 }}
+        className="flex-1 "
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+        }}
       >
         <Text className="text-lg font-semibold">Title</Text>
         <Text className="text-lg font-semibold">Description</Text>
