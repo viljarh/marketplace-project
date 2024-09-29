@@ -25,7 +25,7 @@ export default function Index() {
       <View className="flex-row flex-wrap justify-evenly mx-4 mb-4">
         {Array.from({ length: 8 }).map((_, i) => (
           <View className="w-1/4 p-2" key={i}>
-            <View className="w-full h-20 bg-gray-200 rounded-full" />
+            <View className="w-full h-20 bg-gray-200 rounded-lg" />
             <Text className="text-center mt-2">Category</Text>
           </View>
         ))}
