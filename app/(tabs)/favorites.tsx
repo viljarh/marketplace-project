@@ -4,7 +4,7 @@ export default function FavoritesScreen() {
   return (
     <SafeAreaView>
       <View className="flex-row justify-center items-center px-4 mb-4 border-b border-gray-300 py-2">
-        <Text className="text-lg font-semibold">My favorites</Text>
+        <Text className="text-lg font-semibold">My Favorites</Text>
       </View>
       <ScrollView
         contentContainerStyle={{

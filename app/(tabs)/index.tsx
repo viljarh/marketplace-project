@@ -12,9 +12,10 @@ export default function Index() {
       </View>
 
       <View className="mx-4 mb-4">
-        <View className="flex-row items-center bg-gray-100 rounded-full p-2">
+        <View className="flex-row items-center bg-gray-100 rounded-lg p-2 border border-gray-300">
           <MagnifyingGlassIcon size={20} color="gray" />
           <TextInput
+            autoCapitalize="none"
             className="ml-2 flex-1"
             placeholder="Search"
             placeholderTextColor="gray"
