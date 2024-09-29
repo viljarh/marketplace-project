@@ -5,7 +5,9 @@ export default function Index() {
   return (
     <SafeAreaView className="flex-1">
       <View className="flex-row items-center justify-between p-4">
-        <Text className="text-2xl font-bold">Logo</Text>
+        <Text className="text-2xl font-bold">
+          Market<Text className="text-blue-500">Place</Text>
+        </Text>
         <BellIcon size={24} color="gray" />
       </View>
 
@@ -21,9 +23,10 @@ export default function Index() {
       </View>
 
       <View className="flex-row flex-wrap justify-evenly mx-4 mb-4">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <View className="w-1/2 p-2" key={i}>
-            <View className="w-full h-40 bg-gray-200 rounded-lg" />
+        {Array.from({ length: 8 }).map((_, i) => (
+          <View className="w-1/4 p-2" key={i}>
+            <View className="w-full h-20 bg-gray-200 rounded-full" />
+            <Text className="text-center mt-2">Category</Text>
           </View>
         ))}
       </View>
@@ -33,10 +36,13 @@ export default function Index() {
         <Text className="text-sm text-gray-500">See all</Text>
       </View>
       <ScrollView
-        className="flex-wrap flex-row"
-        contentContainerStyle={{ paddingHorizontal: 16 }}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          flexDirection: "row",
+          flexWrap: "wrap",
+        }}
       >
-        {Array.from({ length: 6 }).map((_, i) => (
+        {Array.from({ length: 12 }).map((_, i) => (
           <View key={i} className="w-1/2 p-2">
             <View className="w-full h-40 bg-gray-200 rounded-lg" />
           </View>
