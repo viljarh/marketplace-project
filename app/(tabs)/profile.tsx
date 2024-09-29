@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import {
   Text,
   View,
@@ -38,7 +39,10 @@ export default function ProfileScreen() {
             <HeartIcon size={24} color="gray" />
           </TouchableOpacity>
 
-          <TouchableOpacity className="flex-row justify-between items-center py-4 border-t border-gray-200">
+          <TouchableOpacity
+            onPress={() => router.push("/settings")}
+            className="flex-row justify-between items-center py-4 border-t border-gray-200"
+          >
             <Text className="text-base">Settings</Text>
             <Cog6ToothIcon size={24} color="gray" />
           </TouchableOpacity>

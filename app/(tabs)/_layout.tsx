@@ -71,6 +71,7 @@ const TabLayout = () => {
               }}
             />
           ),
+          tabBarStyle: { display: "none" },
         }}
       />
 
