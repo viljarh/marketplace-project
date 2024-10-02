@@ -65,9 +65,13 @@ export default function Index() {
           }}
         >
           {Array.from({ length: 12 }).map((_, i) => (
-            <View key={i} className="w-1/2 p-2">
+            <TouchableOpacity
+              key={i}
+              className="w-1/2 p-2"
+              onPress={() => router.push("/product")}
+            >
               <View className="w-full h-40 bg-gray-200 rounded-lg" />
-            </View>
+            </TouchableOpacity>
           ))}
         </ScrollView>
       </SafeAreaView>
