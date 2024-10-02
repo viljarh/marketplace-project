@@ -5,8 +5,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Button,
   Alert,
+  ScrollView
 } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { router } from "expo-router";
@@ -25,7 +25,7 @@ export default function ProductDetails() {
         <Text className="text-lg font-semibold">Product details</Text>
         <View style={{ width: 50 }} />
       </View>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Image
           style={styles.image}
           source={require("../../assets/images/placeholder.png")}
@@ -38,9 +38,24 @@ export default function ProductDetails() {
           >
             <Text style={{ color: "white" }}>Buy product</Text>
           </TouchableOpacity>
-          <Text></Text>
+          <Text style={{ marginTop: 20, fontWeight: 500 }}>Description</Text>
+          <Text>
+            This is a random generated description for the details page for a
+            product. This is a random generated description for the details page
+            for a product. This is a random generated description for the
+            details page for a product. This is a random generated description
+            for the details page for a product. This is a random generated
+            description for the details page for a product. This is a random
+            generated description for the details page for a product.{" "}
+          </Text>
+          <Text style={{ marginTop: 20, fontWeight: 500 }}>Sellers info</Text>
+          <Text>
+            This is a random generated description for the sellers info on the
+            details page for a product. It will contain info such as mail, phone
+            number, etc. 
+          </Text>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -49,7 +64,7 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     flexDirection: "column",
-    alignItems: "center",
+    
   },
   image: {
     width: "100%",
