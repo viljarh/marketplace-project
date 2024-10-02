@@ -21,7 +21,7 @@ export default function FeedPage() {
           onPress={() => router.back()}
         >
           <ChevronLeftIcon size={20} color="gray" />
-          <Text className="text-gray-500 ml-1">Back</Text>
+          <Text className="text-gray-500 ml-1">Back </Text>
         </TouchableOpacity>
         <View style={{ width: 50 }} />
       </View>

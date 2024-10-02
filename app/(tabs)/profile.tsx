@@ -51,7 +51,7 @@ export default function ProfileScreen() {
 
       <View className="p-4">
         <TouchableOpacity className="flex-row justify-between items-center py-4 border-t border-gray-200">
-          <Text className="text-red-600 font-semibold">Log Out</Text>
+          <Text className="text-red-500 font-semibold">Log Out</Text>
           <ArrowRightEndOnRectangleIcon size={24} color="red" />
         </TouchableOpacity>
       </View>
