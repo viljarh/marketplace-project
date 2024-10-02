@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Image,
 } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { router } from "expo-router";
