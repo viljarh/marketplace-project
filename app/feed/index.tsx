@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import {
   SafeAreaView,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -24,7 +25,7 @@ export default function FeedPage() {
         </TouchableOpacity>
         <View style={{ width: 50 }} />
       </View>
-      <View className="mx-4 mb-4">
+      <View className="mx-6 mb-4">
         <View className="flex-row items-center bg-gray-100 rounded-lg p-2 border border-gray-300">
           <MagnifyingGlassIcon size={20} color="gray" />
           <TextInput
@@ -34,7 +35,21 @@ export default function FeedPage() {
             placeholderTextColor="gray"
           />
         </View>
+        <Text className="font-semibold mt-3">Electronics / Computer</Text>
       </View>
+      <ScrollView
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          flexDirection: "row",
+          flexWrap: "wrap",
+        }}
+      >
+        {Array.from({ length: 24 }).map((_, i) => (
+          <View key={i} className="w-1/2 p-2">
+            <View className="w-full h-40 bg-gray-200 rounded-lg" />
+          </View>
+        ))}
+      </ScrollView>
     </SafeAreaView>
   );
 }
