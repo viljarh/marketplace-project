@@ -35,7 +35,7 @@ export default function FeedPage() {
             placeholderTextColor="gray"
           />
         </View>
-        <Text className="font-semibold mt-3">Electronics 〉Computer</Text>
+        <Text className="font-semibold mt-3">Electronics / Computer</Text>
       </View>
       <ScrollView
         contentContainerStyle={{
