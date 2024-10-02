@@ -12,13 +12,13 @@ import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
 export default function Index() {
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex-row items-center justify-between p-4">
+      <View className="flex-row items-center justify-between mx-2 p-4">
         <Text className="text-2xl font-bold">
           Market<Text className="text-blue-500">Place</Text>
         </Text>
         <BellIcon size={24} color="gray" />
       </View>
-      <View className="mx-4 mb-4">
+      <View className="mx-6 mb-4">
         <View className="flex-row items-center bg-gray-100 rounded-lg p-2 border border-gray-300">
           <MagnifyingGlassIcon size={20} color="gray" />
           <TextInput
@@ -41,7 +41,7 @@ export default function Index() {
           </TouchableOpacity>
         ))}
       </View>
-      <View className="flex-row justify-between items-center px-4 mb-4">
+      <View className="flex-row mx-2 justify-between items-center px-4 mb-4">
         <Text className="text-lg font-semibold">Recommended</Text>
         <Text className="text-sm text-gray-500">See all</Text>
       </View>
