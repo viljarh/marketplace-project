@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  Button,
+  Alert,
 } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { router } from "expo-router";
@@ -30,6 +32,13 @@ export default function ProductDetails() {
         />
         <View style={styles.contentContainer}>
           <Text style={{ fontWeight: 600, fontSize: 18 }}>Product Name</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => Alert.alert("Simple Button pressed")}
+          >
+            <Text style={{ color: "white" }}>Buy product</Text>
+          </TouchableOpacity>
+          <Text></Text>
         </View>
       </View>
     </SafeAreaView>
@@ -52,5 +61,13 @@ const styles = StyleSheet.create({
     height: "100%",
     padding: 20,
     backgroundColor: "white",
+  },
+  button: {
+    backgroundColor: "rgb(59, 130, 246)",
+    alignItems: "center",
+    height: 36,
+    justifyContent: "center",
+    borderRadius: 6,
+    marginTop: 20,
   },
 });
