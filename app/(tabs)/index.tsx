@@ -1,4 +1,12 @@
-import { SafeAreaView, ScrollView, Text, TextInput, View } from "react-native";
+import { router } from "expo-router";
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
 
 export default function Index() {
@@ -10,7 +18,6 @@ export default function Index() {
         </Text>
         <BellIcon size={24} color="gray" />
       </View>
-
       <View className="mx-4 mb-4">
         <View className="flex-row items-center bg-gray-100 rounded-lg p-2 border border-gray-300">
           <MagnifyingGlassIcon size={20} color="gray" />
@@ -22,16 +29,18 @@ export default function Index() {
           />
         </View>
       </View>
-
       <View className="flex-row flex-wrap justify-evenly mx-4 mb-4">
         {Array.from({ length: 8 }).map((_, i) => (
-          <View className="w-1/4 p-2" key={i}>
+          <TouchableOpacity
+            key={i}
+            className="w-1/4 p-2"
+            onPress={() => router.push("/feed")}
+          >
             <View className="w-full h-20 bg-gray-200 rounded-lg" />
-            <Text className="text-center mt-2">Category</Text>
-          </View>
+            <Text className="text-center mt-2">Category {i + 1}</Text>
+          </TouchableOpacity>
         ))}
       </View>
-
       <View className="flex-row justify-between items-center px-4 mb-4">
         <Text className="text-lg font-semibold">Recommended</Text>
         <Text className="text-sm text-gray-500">See all</Text>
