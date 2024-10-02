@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+    "@firebasegen/default": "file:generated/javascript/default",
     "@react-native-picker/picker": "2.7.5",
     "@react-navigation/native": "^6.0.2",
     "expo": "~51.0.28",
@@ -27,6 +28,7 @@
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.7",
     "expo-web-browser": "~13.0.3",
+    "firebase": "^10.14.0",
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-dom": "18.2.0",
