@@ -25,7 +25,7 @@ export default function FeedPage() {
         </TouchableOpacity>
         <View style={{ width: 50 }} />
       </View>
-      <View className="mx-4 mb-4">
+      <View className="mx-6 mb-4">
         <View className="flex-row items-center bg-gray-100 rounded-lg p-2 border border-gray-300">
           <MagnifyingGlassIcon size={20} color="gray" />
           <TextInput
