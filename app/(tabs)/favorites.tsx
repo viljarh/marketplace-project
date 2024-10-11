@@ -1,9 +1,21 @@
-import { SafeAreaView, Text, View, ScrollView } from "react-native";
+import {
+  SafeAreaView,
+  Text,
+  View,
+  ScrollView,
+  Platform,
+  StatusBar,
+} from "react-native";
 
 export default function FavoritesScreen() {
   return (
     <SafeAreaView>
-      <View className="flex-row justify-center items-center px-4 mb-4 border-b border-gray-300 py-2">
+      <View
+        className="flex-row justify-center items-center px-4 mb-4 border-b border-gray-300 py-2"
+        style={{
+          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        }}
+      >
         <Text className="text-lg font-semibold">My Favorites</Text>
       </View>
       <ScrollView

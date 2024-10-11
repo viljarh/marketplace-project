@@ -8,15 +8,22 @@ import {
   View,
   Keyboard,
   TouchableWithoutFeedback,
+  Platform,
+  StatusBar,
 } from "react-native";
 import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
 
 export default function Index() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView className="flex-1">
+      <SafeAreaView style={{ flex: 1 }}>
         {/* Header */}
-        <View className="flex-row items-center justify-between p-4">
+        <View
+          className="flex-row items-center justify-between p-4"
+          style={{
+            paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+          }}
+        >
           <Text className="text-2xl font-bold">
             Market<Text className="text-blue-500">Place</Text>
           </Text>
@@ -58,6 +65,7 @@ export default function Index() {
 
         {/* Scrollable Recommended Items */}
         <ScrollView
+          style={{ flex: 1 }}
           contentContainerStyle={{
             paddingHorizontal: 16,
             flexDirection: "row",

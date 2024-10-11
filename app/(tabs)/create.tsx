@@ -1,7 +1,9 @@
 import { router } from "expo-router";
 import {
+  Platform,
   SafeAreaView,
   ScrollView,
+  StatusBar,
   Text,
   TextInput,
   TouchableOpacity,
@@ -12,7 +14,12 @@ import { CameraIcon, ChevronLeftIcon } from "react-native-heroicons/outline";
 export default function CreatePostScreen() {
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex-row justify-between items-center px-4 mb-4 border-b border-gray-300 py-2">
+      <View
+        className="flex-row justify-between items-center px-4 mb-4 border-b border-gray-300 py-2"
+        style={{
+          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        }}
+      >
         <TouchableOpacity
           className="flex-row items-center"
           onPress={() => router.back()}

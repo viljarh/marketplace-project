@@ -1,10 +1,22 @@
-import { SafeAreaView, Text, View, TouchableOpacity } from "react-native";
+import {
+  SafeAreaView,
+  Text,
+  View,
+  TouchableOpacity,
+  Platform,
+  StatusBar,
+} from "react-native";
 import { ChevronRightIcon } from "react-native-heroicons/outline";
 
 export default function MessagesScreen() {
   return (
     <SafeAreaView>
-      <View className="flex-row justify-center items-center px-4 mb-4 border-b border-gray-300 py-2">
+      <View
+        className="flex-row justify-center items-center px-4 mb-4 border-b border-gray-300 py-2"
+        style={{
+          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        }}
+      >
         <Text className="text-lg font-semibold">Messages</Text>
       </View>
       <View className="p-4">
