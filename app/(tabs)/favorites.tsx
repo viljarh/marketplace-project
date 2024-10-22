@@ -1,4 +1,5 @@
-import { SafeAreaView, Text, View, ScrollView } from "react-native";
+import { Text, View, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function FavoritesScreen() {
   return (

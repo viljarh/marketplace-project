@@ -1,5 +1,6 @@
-import { SafeAreaView, Text, View, TouchableOpacity } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import { ChevronRightIcon } from "react-native-heroicons/outline";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MessagesScreen() {
   return (
