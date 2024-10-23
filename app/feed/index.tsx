@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { router } from "expo-router";
 import {
   SafeAreaView,
@@ -6,14 +7,22 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Modal,
+  Button,
 } from "react-native";
 import {
   ChevronLeftIcon,
   MagnifyingGlassIcon,
-  FunnelIcon,
+  FunnelIcon
 } from "react-native-heroicons/outline";
 
 export default function FeedPage() {
+  const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
+
+  const toggleBottomSheet = () => {
+    setBottomSheetVisible(!isBottomSheetVisible);
+  };
+
   return (
     <SafeAreaView>
       <View className="flex-row justify-between items-center px-4 mb-4 py-2">
@@ -22,16 +31,14 @@ export default function FeedPage() {
           onPress={() => router.back()}
         >
           <ChevronLeftIcon size={20} color="gray" />
-          <Text className="text-gray-500 ml-1">Back </Text>
+          <Text className="text-gray-500 ml-1">Back</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-           
-          }}
-        >
+
+        <TouchableOpacity onPress={toggleBottomSheet}>
           <FunnelIcon size={20} color="gray" />
         </TouchableOpacity>
       </View>
+
       <View className="mx-6 mb-4">
         <View className="flex-row items-center bg-gray-100 rounded-lg p-2 border border-gray-300">
           <MagnifyingGlassIcon size={20} color="gray" />
@@ -44,6 +51,7 @@ export default function FeedPage() {
         </View>
         <Text className="font-semibold mt-3">Electronics / Computer</Text>
       </View>
+
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: 16,
@@ -57,6 +65,20 @@ export default function FeedPage() {
           </View>
         ))}
       </ScrollView>
+
+      <Modal
+        visible={isBottomSheetVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={toggleBottomSheet}
+      >
+        <View className="flex-1 justify-end">
+          <View className="bg-white p-4 rounded-t-lg shadow-lg">
+            <Text className="text-lg font-semibold mb-4">Filter Options</Text>
+            <Button title="Close" onPress={toggleBottomSheet} />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
