@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Image,
   Alert,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { router } from "expo-router";
@@ -52,7 +52,7 @@ export default function ProductDetails() {
           <Text>
             This is a random generated description for the sellers info on the
             details page for a product. It will contain info such as mail, phone
-            number, etc. 
+            number, etc.
           </Text>
         </View>
       </ScrollView>
@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     flexDirection: "column",
-    
   },
   image: {
     width: "100%",
