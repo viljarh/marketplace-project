@@ -17,6 +17,7 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
     "@firebasegen/default": "file:generated/javascript/default",
+    "@gorhom/bottom-sheet": "^5.0.4",
     "@react-native-picker/picker": "2.7.5",
     "@react-navigation/native": "^6.0.2",
     "dotenv": "^16.4.5",
