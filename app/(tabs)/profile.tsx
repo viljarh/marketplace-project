@@ -2,7 +2,6 @@ import { router } from "expo-router";
 import {
   Text,
   View,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
@@ -13,6 +12,7 @@ import {
   HeartIcon,
   UserCircleIcon,
 } from "react-native-heroicons/outline";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProfileScreen() {
   return (
@@ -50,7 +50,8 @@ export default function ProfileScreen() {
       </ScrollView>
 
       <View className="p-4">
-        <TouchableOpacity className="flex-row justify-between items-center py-4 border-t border-gray-200">
+        <TouchableOpacity
+          className="flex-row justify-between items-center py-4 border-t border-gray-200">
           <Text className="text-red-500 font-semibold">Log Out</Text>
           <ArrowRightEndOnRectangleIcon size={24} color="red" />
         </TouchableOpacity>

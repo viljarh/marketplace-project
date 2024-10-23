@@ -1,6 +1,5 @@
 import { router } from "expo-router";
 import {
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
@@ -8,6 +7,7 @@ import {
   View,
 } from "react-native";
 import { CameraIcon, ChevronLeftIcon } from "react-native-heroicons/outline";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CreatePostScreen() {
   return (
