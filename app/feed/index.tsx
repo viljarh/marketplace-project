@@ -9,11 +9,12 @@ import {
   View,
   Modal,
   Button,
+  StyleSheet,
 } from "react-native";
 import {
   ChevronLeftIcon,
   MagnifyingGlassIcon,
-  FunnelIcon
+  FunnelIcon,
 } from "react-native-heroicons/outline";
 
 export default function FeedPage() {
@@ -72,13 +73,42 @@ export default function FeedPage() {
         transparent={true}
         onRequestClose={toggleBottomSheet}
       >
-        <View className="flex-1 justify-end">
-          <View className="bg-white p-4 rounded-t-lg shadow-lg">
-            <Text className="text-lg font-semibold mb-4">Filter Options</Text>
-            <Button title="Close" onPress={toggleBottomSheet} />
-          </View>
+       <View style={styles.bottomSheetView}>
+        <View style={styles.bottomSheet}>
+          <Text style={styles.modalText}>Filters</Text>
+          <Button title="Close" onPress={toggleBottomSheet} />
         </View>
+      </View>
       </Modal>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  bottomSheetView: {
+    flex: 1,
+    justifyContent: "flex-end",  
+  },
+  bottomSheet: {
+    width: "100%",
+    backgroundColor: "white",
+    borderTopLeftRadius: 20,      
+    borderTopRightRadius: 20,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    minHeight: "80%",            
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+});
