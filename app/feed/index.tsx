@@ -10,6 +10,7 @@ import {
 import {
   ChevronLeftIcon,
   MagnifyingGlassIcon,
+  FunnelIcon,
 } from "react-native-heroicons/outline";
 
 export default function FeedPage() {
@@ -23,7 +24,13 @@ export default function FeedPage() {
           <ChevronLeftIcon size={20} color="gray" />
           <Text className="text-gray-500 ml-1">Back </Text>
         </TouchableOpacity>
-        <View style={{ width: 50 }} />
+        <TouchableOpacity
+          onPress={() => {
+           
+          }}
+        >
+          <FunnelIcon size={20} color="gray" />
+        </TouchableOpacity>
       </View>
       <View className="mx-6 mb-4">
         <View className="flex-row items-center bg-gray-100 rounded-lg p-2 border border-gray-300">
