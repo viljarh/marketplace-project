@@ -10,6 +10,7 @@ import {
   Modal,
   Button,
   StyleSheet,
+  Pressable,
 } from "react-native";
 import {
   ChevronLeftIcon,
@@ -25,7 +26,7 @@ export default function FeedPage() {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <View className="flex-row justify-between items-center px-4 mb-4 py-2">
         <TouchableOpacity
           className="flex-row items-center"
@@ -73,20 +74,26 @@ export default function FeedPage() {
         transparent={true}
         onRequestClose={toggleBottomSheet}
       >
-       <View style={styles.bottomSheetView}>
-        <View style={styles.bottomSheet}>
-          <Text style={styles.modalText}>Filters</Text>
-          <Button title="Close" onPress={toggleBottomSheet} />
+        {/* Touchable area outside the bottom sheet to close it */}
+        <Pressable style={styles.overlay} onPress={toggleBottomSheet}>
+          {/* Empty pressable area to detect touches */}
+        </Pressable>
+        <View style={styles.bottomSheetView}>
+          <View style={styles.bottomSheet}>
+            <Text style={styles.modalText}>Filters</Text>
+            <Button title="Close" onPress={toggleBottomSheet} />
+          </View>
         </View>
-      </View>
       </Modal>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  bottomSheetView: {
+  overlay: {
     flex: 1,
+  },
+  bottomSheetView: {
     justifyContent: "flex-end",  
   },
   bottomSheet: {
@@ -103,7 +110,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    minHeight: "80%",            
+    minHeight: "70%", 
   },
   modalText: {
     marginBottom: 15,
