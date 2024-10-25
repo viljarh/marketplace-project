@@ -7,21 +7,18 @@ export default function SignIn() {
   const { signIn } = useSession();
 
   const handleSignIn = () => {
-    if (typeof signIn === 'function') {
-      signIn()
-      router.replace("/")
+    if (typeof signIn === "function") {
+      signIn();
+      router.replace("/");
     } else {
-      console.log('sign in is not a function')
+      console.log("Sign in is not a function");
     }
-  }
+  };
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text style={{ fontSize: 24, marginBottom: 20 }}>Sign In</Text>
-      <Button
-        title="Sign In"
-        onPress={handleSignIn}
-      />
+      <Button title="Sign In" onPress={handleSignIn} />
     </View>
   );
 }
