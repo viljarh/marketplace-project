@@ -5,7 +5,10 @@ import { ChevronLeftIcon } from "react-native-heroicons/outline";
 export default function SettingsPage() {
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex-row justify-between items-center px-4 mb-4 border-b border-gray-300 py-2">
+      <View
+        className="flex-row justify-between items-center px-4 mb-4 border-b
+      border-gray-300 py-2"
+      >
         <TouchableOpacity
           className="flex-row items-center"
           onPress={() => router.back()}
