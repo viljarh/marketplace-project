@@ -1,10 +1,6 @@
+import { useSession } from "app/ctx";
 import { router } from "expo-router";
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 import {
   ArrowRightEndOnRectangleIcon,
   Cog6ToothIcon,
@@ -15,6 +11,17 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProfileScreen() {
+  const { session, signOut } = useSession();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      router.replace("/sign-in");
+    } catch (error) {
+      console.error("Failed to sign out", error);
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1">
       <View className="flex-row justify-center items-center px-4 mb-4 border-b border-gray-300 py-2">
@@ -24,8 +31,9 @@ export default function ProfileScreen() {
       <ScrollView className="flex-1">
         <View className="flex items-center my-6">
           <UserCircleIcon size={64} color="#3A82F6" />
-          <Text className="text-lg font-semibold mt-2">Viljar Hoem-Olsen</Text>
-          <Text className="text-gray-500">viljar.hoem.olsen@gmail.com </Text>
+          <Text className="text-lg font-semibold mt-2">
+            {session?.email || "User"}
+          </Text>
         </View>
 
         <View className="p-4">
@@ -51,7 +59,9 @@ export default function ProfileScreen() {
 
       <View className="p-4">
         <TouchableOpacity
-          className="flex-row justify-between items-center py-4 border-t border-gray-200">
+          className="flex-row justify-between items-center py-4 border-t border-gray-200"
+          onPress={handleSignOut}
+        >
           <Text className="text-red-500 font-semibold">Log Out</Text>
           <ArrowRightEndOnRectangleIcon size={24} color="red" />
         </TouchableOpacity>

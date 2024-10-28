@@ -1,10 +1,10 @@
-import { View, Text, Button, TextInput, StyleSheet } from "react-native";
 import React, { useState } from "react";
+import { View, Text, Button, TextInput, StyleSheet } from "react-native";
 import { useSession } from "./ctx";
 import { router } from "expo-router";
 
 export default function SignIn() {
-  const { signIn, loading } = useSession();
+  const { signIn, signUp, loading } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -14,11 +14,16 @@ export default function SignIn() {
       await signIn(email, password);
       router.replace("/");
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Failed to sign in");
-      }
+      setError("Failed to sign in");
+    }
+  };
+
+  const handleSignUp = async () => {
+    try {
+      await signUp(email, password);
+      router.replace("/");
+    } catch (err) {
+      setError("Failed to sign up");
     }
   };
 
@@ -46,6 +51,7 @@ export default function SignIn() {
         onPress={handleSignIn}
         disabled={loading}
       />
+      {error && <Button title="Sign Up" onPress={handleSignUp} />}
     </View>
   );
 }
