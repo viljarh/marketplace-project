@@ -24,7 +24,10 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex-row justify-center items-center px-4 mb-4 border-b border-gray-300 py-2">
+      <View
+        className="flex-row justify-center items-center px-4 mb-4 border-b
+      border-gray-300 py-2"
+      >
         <Text className="text-lg font-semibold">Profile</Text>
       </View>
 
@@ -37,19 +40,26 @@ export default function ProfileScreen() {
         </View>
 
         <View className="p-4">
-          <TouchableOpacity className="flex-row justify-between items-center py-4 border-t border-gray-200">
+          <TouchableOpacity
+            className="flex-row justify-between items-center 
+          py-4 border-t border-gray-200"
+          >
             <Text className="text-base">My Posts</Text>
             <DocumentIcon size={24} color="gray" />
           </TouchableOpacity>
 
-          <TouchableOpacity className="flex-row justify-between items-center py-4 border-t border-gray-200">
+          <TouchableOpacity
+            className="flex-row justify-between items-center 
+          py-4 border-t border-gray-200"
+          >
             <Text className="text-base">My Favorites</Text>
             <HeartIcon size={24} color="gray" />
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => router.push("/settings")}
-            className="flex-row justify-between items-center py-4 border-t border-gray-200"
+            className="flex-row justify-between items-center py-4 border-t
+            border-gray-200"
           >
             <Text className="text-base">Settings</Text>
             <Cog6ToothIcon size={24} color="gray" />
@@ -59,7 +69,8 @@ export default function ProfileScreen() {
 
       <View className="p-4">
         <TouchableOpacity
-          className="flex-row justify-between items-center py-4 border-t border-gray-200"
+          className="flex-row justify-between items-center py-4 border-t 
+          border-gray-200"
           onPress={handleSignOut}
         >
           <Text className="text-red-500 font-semibold">Log Out</Text>
