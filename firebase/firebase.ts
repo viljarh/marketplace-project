@@ -9,7 +9,7 @@ import {
   initializeAuth,
   getReactNativePersistence,
 } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const firebaseConfig = {
@@ -32,13 +32,32 @@ export const signUp = async (
   email: string,
   password: string
 ): Promise<User | null> => {
-  const userCredential = await createUserWithEmailAndPassword(
+  try {
+      
+    const userCredential = await createUserWithEmailAndPassword(
     auth,
     email,
     password
   );
-  return userCredential.user;
+  const user = userCredential.user;
+
+  const userRef = doc(db, 'users', user.uid);
+  await setDoc(userRef, {
+    email: user.email,
+    createdAt: new Date(),
+    });
+
+    console.log("User created and saved to FireStore!")
+
+    return user;
+
+  } catch(error) {
+  
+  console.error("Error signing up or saving user to firestore:", error);
+  return null;}
+
 };
+
 
 export const signIn = async (
   email: string,
