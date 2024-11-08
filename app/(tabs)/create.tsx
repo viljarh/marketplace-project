@@ -38,7 +38,7 @@ export default function CreatePostScreen() {
       
       try {
 
-        const docRef = await addDoc(collection(db, 'product'), productData);
+        const docRef = await addDoc(collection(db, 'products'), productData);
         console.log('Product created successfully with ID:', docRef.id)
 
         router.back(); 
