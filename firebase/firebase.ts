@@ -9,7 +9,14 @@ import {
   initializeAuth,
   getReactNativePersistence,
 } from "firebase/auth";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  setDoc,
+} from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const firebaseConfig = {
@@ -30,43 +37,39 @@ export const auth: Auth = initializeAuth(app, {
 
 export const signUp = async (
   email: string,
-  password: string
+  password: string,
 ): Promise<User | null> => {
   try {
-      
     const userCredential = await createUserWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
-  const user = userCredential.user;
+      auth,
+      email,
+      password,
+    );
+    const user = userCredential.user;
 
-  const userRef = doc(db, 'users', user.uid);
-  await setDoc(userRef, {
-    email: user.email,
-    createdAt: new Date(),
+    const userRef = doc(db, "users", user.uid);
+    await setDoc(userRef, {
+      email: user.email,
+      createdAt: new Date(),
     });
 
-    console.log("User created and saved to FireStore!")
+    console.log("User created and saved to FireStore!");
 
     return user;
-
-  } catch(error) {
-  
-  console.error("Error signing up or saving user to firestore:", error);
-  return null;}
-
+  } catch (error) {
+    console.error("Error signing up or saving user to firestore:", error);
+    return null;
+  }
 };
-
 
 export const signIn = async (
   email: string,
-  password: string
+  password: string,
 ): Promise<User | null> => {
   const userCredential = await signInWithEmailAndPassword(
     auth,
     email,
-    password
+    password,
   );
   return userCredential.user;
 };
@@ -76,9 +79,37 @@ export const signOut = async (): Promise<void> => {
 };
 
 export const onAuthStateChangeListener = (
-  callback: (user: User | null) => void
+  callback: (user: User | null) => void,
 ) => {
   return onAuthStateChanged(auth, callback);
 };
+
+export async function fetchProducts() {
+  const productsRef = collection(db, "products");
+  const snapshot = await getDocs(productsRef);
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+}
+
+export async function fetchProductById(productId: string) {
+  const productRef = doc(db, "products", productId);
+  const productSnap = await getDoc(productRef);
+  return productSnap.exists()
+    ? { id: productSnap.id, ...productSnap.data() }
+    : null;
+}
+
+export async function fetchPosts() {
+  const productsRef = collection(db, "posts");
+  const snapshot = await getDocs(productsRef);
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+}
+
+export async function fetchPostById(productId: string) {
+  const productRef = doc(db, "posts", productId);
+  const productSnap = await getDoc(productRef);
+  return productSnap.exists()
+    ? { id: productSnap.id, ...productSnap.data() }
+    : null;
+}
 
 export { db };

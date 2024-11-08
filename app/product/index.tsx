@@ -15,7 +15,7 @@ export default function ProductDetails() {
   return (
     <SafeAreaView>
       <View
-        className="flex-row justify-between items-center px-4 border-b 
+        className="flex-row justify-between items-center px-4 border-b
         border-gray-300 py-2"
       >
         <TouchableOpacity
@@ -88,4 +88,3 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
-
