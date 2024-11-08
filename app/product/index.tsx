@@ -9,9 +9,38 @@ import {
   ScrollView,
 } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
+import { fetchProductById } from "firebase/firebase";
 
+interface Product {
+  id: string;
+  title: string;
+  description: string;
+  price: string;
+  condition: string;
+  category: string;
+  createdAt: Date;
+}
 export default function ProductDetails() {
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const { productId } = useLocalSearchParams();
+
+  useEffect(() => {
+    if (typeof productId === "string") {
+      fetchProductById(productId)
+        .then((data) => {
+          setProduct(data as Product);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching product:", error);
+          setLoading(false);
+        });
+    }
+  }, [productId]);
+
   return (
     <SafeAreaView>
       <View
@@ -34,29 +63,22 @@ export default function ProductDetails() {
           source={require("../../assets/images/placeholder.png")}
         />
         <View style={styles.contentContainer}>
-          <Text style={{ fontWeight: 600, fontSize: 18 }}>Product Name</Text>
+          <Text style={{ fontWeight: 600, fontSize: 18 }}>
+            {product?.title}
+          </Text>
+          <Text style={{ fontSize: 18, color: "#3a82F6", marginVertical: 10 }}>
+            {product?.price} NOK
+          </Text>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => Alert.alert("Simple Button pressed")}
+            onPress={() => Alert.alert("Buy button pressed")}
           >
             <Text style={{ color: "white" }}>Buy product</Text>
           </TouchableOpacity>
           <Text style={{ marginTop: 20, fontWeight: 500 }}>Description</Text>
-          <Text>
-            This is a random generated description for the details page for a
-            product. This is a random generated description for the details page
-            for a product. This is a random generated description for the
-            details page for a product. This is a random generated description
-            for the details page for a product. This is a random generated
-            description for the details page for a product. This is a random
-            generated description for the details page for a product.
-          </Text>
-          <Text style={{ marginTop: 20, fontWeight: 500 }}>Sellers info</Text>
-          <Text>
-            This is a random generated description for the sellers info on the
-            details page for a product. It will contain info such as mail, phone
-            number, etc.
-          </Text>
+          <Text>{product?.description}</Text>
+          <Text style={{ marginTop: 20, fontWeight: 500 }}>Condition</Text>
+          <Text>{product?.condition}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

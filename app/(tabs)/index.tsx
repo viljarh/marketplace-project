@@ -1,4 +1,6 @@
 import { router } from "expo-router";
+import { fetchPosts, fetchProducts } from "firebase/firebase";
+import { useEffect, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -7,11 +9,44 @@ import {
   View,
   Keyboard,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from "react-native";
 import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+interface Post {
+  id: string;
+  title: string;
+  description: string;
+  price: string;
+  condition: string;
+  category: string;
+  createdAt: Date;
+}
+
 export default function Index() {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPosts()
+      .then((data: Post[]) => {
+        setPosts(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#3A82F6" />
+      </SafeAreaView>
+    );
+  }
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView className="flex-1">

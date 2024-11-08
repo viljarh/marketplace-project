@@ -104,12 +104,4 @@ export async function fetchPosts() {
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 }
 
-export async function fetchPostById(productId: string) {
-  const productRef = doc(db, "posts", productId);
-  const productSnap = await getDoc(productRef);
-  return productSnap.exists()
-    ? { id: productSnap.id, ...productSnap.data() }
-    : null;
-}
-
 export { db };
