@@ -1,5 +1,6 @@
 import { router } from "expo-router";
-import { fetchPosts, fetchProducts } from "firebase/firebase";
+import { fetchProducts } from "firebase/firebase";
+import { Product } from "firebase/firebaseTypes";
 import { useEffect, useState } from "react";
 import {
   ScrollView,
@@ -14,30 +15,22 @@ import {
 import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-interface Post {
-  id: string;
-  title: string;
-  description: string;
-  price: string;
-  condition: string;
-  category: string;
-  createdAt: Date;
-}
-
 export default function Index() {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchPosts()
-      .then((data: Post[]) => {
-        setPosts(data);
-        setLoading(false);
-      })
-      .catch((error) => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchProducts();
+        setProducts(data);
+      } catch (error) {
         console.error("Error fetching products:", error);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+    fetchData();
   }, []);
 
   if (loading) {
@@ -99,13 +92,20 @@ export default function Index() {
             flexWrap: "wrap",
           }}
         >
-          {Array.from({ length: 12 }).map((_, i) => (
+          {products.map((product) => (
             <TouchableOpacity
-              key={i}
+              key={product.id}
               className="w-1/2 p-2"
               onPress={() => router.push("/product")}
             >
-              <View className="w-full h-40 bg-gray-200 rounded-lg" />
+              <View className="w-full h-40 bg-gray-200 rounded-lg">
+                <Text className="text-center font-semibold mt-2">
+                  {product.title}
+                </Text>
+                <Text className="text-center text-gray-600">
+                  {product.price} NOK
+                </Text>
+              </View>
             </TouchableOpacity>
           ))}
         </ScrollView>

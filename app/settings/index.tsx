@@ -1,6 +1,7 @@
 import { router } from "expo-router";
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SettingsPage() {
   return (

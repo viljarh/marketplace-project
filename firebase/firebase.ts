@@ -15,9 +15,11 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  query,
   setDoc,
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Product } from "./firebaseTypes";
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY!,
@@ -84,24 +86,17 @@ export const onAuthStateChangeListener = (
   return onAuthStateChanged(auth, callback);
 };
 
-export async function fetchProducts() {
-  const productsRef = collection(db, "products");
-  const snapshot = await getDocs(productsRef);
-  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-}
+export async function fetchProducts(): Promise<Product[]> {
+  const productsCollection = collection(db, "products");
+  const productsQuery = query(productsCollection);
+  const querySnapshot = await getDocs(productsQuery);
 
-export async function fetchProductById(productId: string) {
-  const productRef = doc(db, "products", productId);
-  const productSnap = await getDoc(productRef);
-  return productSnap.exists()
-    ? { id: productSnap.id, ...productSnap.data() }
-    : null;
-}
+  const products: Product[] = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Product[];
 
-export async function fetchPosts() {
-  const productsRef = collection(db, "posts");
-  const snapshot = await getDocs(productsRef);
-  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  return products;
 }
 
 export { db };
