@@ -10,6 +10,9 @@ import {
   getReactNativePersistence,
 } from "firebase/auth";
 import {
+  CollectionReference,
+  Timestamp,
+  addDoc,
   collection,
   doc,
   getDoc,
@@ -98,5 +101,43 @@ export async function fetchProducts(): Promise<Product[]> {
 
   return products;
 }
+
+export async function fetchProductsById(productId: string) {
+  const productRef = doc(db, "products", productId);
+  const productSnap = await getDoc(productRef);
+
+  if (productSnap.exists()) {
+    return { id: productSnap.id, ...productSnap.data() };
+  } else {
+    console.log("No such product");
+    return null;
+  }
+}
+
+export const handleCreatePost = async (
+  title: string,
+  description: string,
+  price: string,
+  category: string,
+  condition: string,
+): Promise<string | null> => {
+  const productData: Omit<Product, "id"> = {
+    title,
+    description,
+    price,
+    category,
+    condition,
+    createdAt: Timestamp.now().toDate(),
+  };
+
+  try {
+    const docRef = await addDoc(collection(db, "products"), productData);
+    console.log("Product created successfully with ID:", docRef.id);
+    return docRef.id;
+  } catch (error) {
+    console.error("Error creating product:", error);
+    return null;
+  }
+};
 
 export { db };

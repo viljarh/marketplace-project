@@ -96,7 +96,12 @@ export default function Index() {
             <TouchableOpacity
               key={product.id}
               className="w-1/2 p-2"
-              onPress={() => router.push("/product")}
+              onPress={() =>
+                router.push({
+                  pathname: "/product/[id]",
+                  params: { id: product.id },
+                })
+              }
             >
               <View className="w-full h-40 bg-gray-200 rounded-lg">
                 <Text className="text-center font-semibold mt-2">

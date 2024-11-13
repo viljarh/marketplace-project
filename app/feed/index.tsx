@@ -1,7 +1,6 @@
 import React, { useCallback, useRef } from "react";
 import { router } from "expo-router";
 import {
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
@@ -19,6 +18,7 @@ import BottomSheet, {
   BottomSheetView,
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function FeedPage() {
   const bottomSheetRef = useRef<BottomSheet>(null);

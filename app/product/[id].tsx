@@ -1,5 +1,4 @@
 import {
-  SafeAreaView,
   View,
   Text,
   TouchableOpacity,
@@ -7,40 +6,46 @@ import {
   Image,
   Alert,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { fetchProductById } from "firebase/firebase";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Product } from "firebase/firebaseTypes";
+import { fetchProductsById } from "firebase/firebase";
 
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  price: string;
-  condition: string;
-  category: string;
-  createdAt: Date;
-}
 export default function ProductDetails() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const { productId } = useLocalSearchParams();
+  const { id } = useLocalSearchParams();
 
   useEffect(() => {
-    if (typeof productId === "string") {
-      fetchProductById(productId)
-        .then((data) => {
+    if (typeof id === "string") {
+      fetchProductsById(id).then((data) => {
+        if (data) {
           setProduct(data as Product);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching product:", error);
-          setLoading(false);
-        });
+        }
+        setLoading(false);
+      });
     }
-  }, [productId]);
+  }, [id]);
 
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="3A82F6" />
+      </SafeAreaView>
+    );
+  }
+
+  if (!product) {
+    return (
+      <SafeAreaView className="flex-1 justify-center items-center">
+        <Text>No product found</Text>
+      </SafeAreaView>
+    );
+  }
   return (
     <SafeAreaView>
       <View
