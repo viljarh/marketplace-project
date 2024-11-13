@@ -7,3 +7,8 @@ export interface Product {
   price: string;
   title: string;
 }
+
+export interface Category {
+  id: string;
+  categoryName: string;
+}

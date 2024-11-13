@@ -1,6 +1,6 @@
 import { router } from "expo-router";
-import { fetchProducts } from "firebase/firebase";
-import { Product } from "firebase/firebaseTypes";
+import { fetchCategories, fetchProducts } from "firebase/firebase";
+import { Category, Product } from "firebase/firebaseTypes";
 import { useEffect, useState } from "react";
 import {
   ScrollView,
@@ -18,12 +18,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Index() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchProducts();
         setProducts(data);
+
+        const categoryData = await fetchCategories();
+        setCategories(categoryData);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -66,14 +70,14 @@ export default function Index() {
 
         {/* Categories */}
         <View className="flex-row flex-wrap justify-evenly mx-4 mb-4">
-          {Array.from({ length: 8 }).map((_, i) => (
+          {categories.map((category) => (
             <TouchableOpacity
-              key={i}
+              key={category.id}
               className="w-1/4 p-2"
               onPress={() => router.push("/feed")}
             >
               <View className="w-full h-20 bg-gray-200 rounded-lg" />
-              <Text className="text-center mt-2">Category {i + 1}</Text>
+              <Text className="text-center mt-2">{category.categoryName}</Text>
             </TouchableOpacity>
           ))}
         </View>

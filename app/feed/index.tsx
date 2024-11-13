@@ -1,5 +1,5 @@
-import React, { useCallback, useRef } from "react";
-import { router } from "expo-router";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
 import {
   ScrollView,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import {
   ChevronLeftIcon,
@@ -19,21 +20,49 @@ import BottomSheet, {
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Product } from "firebase/firebaseTypes";
 
 export default function FeedPage() {
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { categoryId, categoryName } = useLocalSearchParams();
+
+  useEffect(() => {
+    const fetchCategoryProducts = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchProductsByCategory(categoryId as string);
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (categoryId) fetchCategoryProducts();
+  }, [categoryId]);
 
   const openBottomSheet = () => {
     bottomSheetRef.current?.expand();
   };
 
-  const closeBottomSheet = () => {
-    bottomSheetRef.current?.close();
-  };
+  // const closeBottomSheet = () => {
+  //   bottomSheetRef.current?.close();
+  // };
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
+
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#3A82F6" />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -62,7 +91,7 @@ export default function FeedPage() {
               placeholderTextColor="gray"
             />
           </View>
-          <Text className="font-semibold mt-3">Electronics / Computer</Text>
+          <Text className="font-semibold mt-3">{categoryName}</Text>
         </View>
 
         <ScrollView
@@ -72,9 +101,11 @@ export default function FeedPage() {
             flexWrap: "wrap",
           }}
         >
-          {Array.from({ length: 24 }).map((_, i) => (
-            <View key={i} className="w-1/2 p-2">
+          {products.map((product) => (
+            <View key={product.id} className="w-1/2 p-2">
               <View className="w-full h-40 bg-gray-200 rounded-lg" />
+              <Text>{product.title}</Text>
+              <Text>{product.price} NOK</Text>
             </View>
           ))}
         </ScrollView>

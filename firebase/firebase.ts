@@ -10,7 +10,6 @@ import {
   getReactNativePersistence,
 } from "firebase/auth";
 import {
-  CollectionReference,
   Timestamp,
   addDoc,
   collection,
@@ -20,9 +19,10 @@ import {
   getFirestore,
   query,
   setDoc,
+  where,
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Product } from "./firebaseTypes";
+import { Category, Product } from "./firebaseTypes";
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY!,
@@ -139,5 +139,30 @@ export const handleCreatePost = async (
     return null;
   }
 };
+
+export async function fetchCategories(): Promise<Category[]> {
+  const categoriesCollection = collection(db, "categories");
+  const categoriesQuery = query(categoriesCollection);
+  const querySnapshot = await getDocs(categoriesQuery);
+
+  const categories: Category[] = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Category[];
+  return categories;
+}
+
+export async function fetchProductsByCategory(
+  categoryId: string,
+): Promise<Product[]> {
+  const productRef = collection(db, "products");
+  const q = query(productRef, where("category", "==", categoryId));
+  const querySnapshot = await getDocs(q);
+
+  return querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Product[];
+}
 
 export { db };
