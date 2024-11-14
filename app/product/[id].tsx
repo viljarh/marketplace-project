@@ -83,7 +83,7 @@ export default function ProductDetails() {
             style={styles.button}
             onPress={() => Alert.alert("Buy button pressed")}
           >
-            <Text style={styles.buttonText}>Buy product</Text>
+            <Text style={styles.buttonText}>Buy this product</Text>
           </TouchableOpacity>
           <Text style={styles.sectionTitle}>Description</Text>
           <Text style={styles.sectionText}>{product?.description}</Text>
