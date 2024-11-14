@@ -123,16 +123,16 @@ export const handleCreatePost = async (
   price: string,
   category: string,
   condition: string,
-  imageUrls: string[],
+  imageUrl: string | null,
 ): Promise<string | null> => {
-  const productData = {
+  const productData: Omit<Product, "id"> = {
     title,
     description,
     price,
     category,
     condition,
     createdAt: Timestamp.now().toDate(),
-    imageUrls,
+    imageUrl,
   };
 
   try {
