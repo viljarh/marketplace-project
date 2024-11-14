@@ -15,21 +15,16 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isSignUpMode, setIsSignUpMode] = useState(false); // Ny tilstand for modus
 
-  const handleSignIn = async () => {
-    setError(null); 
-    try {
-      await signIn(email, password);
-      router.replace("/");
-    } catch (err: any) {
-      setError(err.message); 
-    }
-  };
-
-  const handleSignUp = async () => {
+  const handleAuth = async () => {
     setError(null);
     try {
-      await signUp(email, password);
+      if (isSignUpMode) {
+        await signUp(email, password);
+      } else {
+        await signIn(email, password);
+      }
       router.replace("/");
     } catch (err: any) {
       setError(err.message);
@@ -38,7 +33,7 @@ export default function SignIn() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign In</Text>
+      <Text style={styles.title}>{isSignUpMode ? "Sign Up" : "Sign In"}</Text>
       <View style={styles.inputContainer}>
         <Icon name="mail-outline" size={25} style={styles.icon} />
         <TextInput
@@ -64,16 +59,21 @@ export default function SignIn() {
       {error && <Text style={styles.errorText}>{error}</Text>}
       <TouchableOpacity
         style={[styles.button, loading && styles.buttonDisabled]}
-        onPress={handleSignIn}
-        disabled={loading} // Disable button during loading
+        onPress={handleAuth}
+        disabled={loading}
       >
         <Text style={styles.buttonText}>
-          {loading ? "Loading..." : "Login"}
+          {loading ? "Loading..." : isSignUpMode ? "Sign Up" : "Login"}
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={handleSignUp} disabled={loading}>
+      <TouchableOpacity onPress={() => setIsSignUpMode(!isSignUpMode)}>
         <Text style={styles.signUp}>
-          Don't have an account? <Text style={styles.signUpLink}>Sign Up</Text>
+          {isSignUpMode
+            ? "Already have an account? "
+            : "Don't have an account? "}
+          <Text style={styles.signUpLink}>
+            {isSignUpMode ? "Login" : "Sign Up"}
+          </Text>
         </Text>
       </TouchableOpacity>
     </View>
