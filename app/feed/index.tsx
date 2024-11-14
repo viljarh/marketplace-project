@@ -21,6 +21,7 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Product } from "firebase/firebaseTypes";
+import { fetchProductsByCategory } from "firebase/firebase";
 
 export default function FeedPage() {
   const bottomSheetRef = useRef<BottomSheet>(null);

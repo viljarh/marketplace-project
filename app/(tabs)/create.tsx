@@ -7,11 +7,11 @@ import {
 } from "react-native";
 import { CameraIcon, ChevronLeftIcon } from "react-native-heroicons/outline";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { db, handleCreatePost } from "../../firebase/firebase";
-import { memo, useState } from "react";
+import { handleCreatePost } from "../../firebase/firebase";
+import { useState } from "react";
 import { useRouter } from "expo-router";
-import { addDoc, collection, Timestamp } from "firebase/firestore";
 import { Picker } from "@react-native-picker/picker";
+import { CATEGORIES } from "constants/constants";
 
 export default function CreatePostScreen() {
   const [title, setTitle] = useState("");
@@ -21,26 +21,6 @@ export default function CreatePostScreen() {
   const [condition, setCondition] = useState("");
 
   const router = useRouter();
-
-  // const handleCreatePost = async () => {
-  //   const productData = {
-  //     title,
-  //     description,
-  //     price,
-  //     category,
-  //     condition,
-  //     createdAt: Timestamp.now(),
-  //   };
-  //
-  //   try {
-  //     const docRef = await addDoc(collection(db, "products"), productData);
-  //     console.log("Product created successfully with ID:", docRef.id);
-  //
-  //     router.replace("/");
-  //   } catch (error) {
-  //     console.error("Error creating product:", error);
-  //   }
-  // };
 
   const createProduct = async () => {
     const newProductId = await handleCreatePost(
@@ -61,7 +41,10 @@ export default function CreatePostScreen() {
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex-row justify-between items-center px-4 mb-4 border-b border-gray-300 py-2">
+      <View
+        className="flex-row justify-between items-center px-4 mb-4 
+      border-b border-gray-300 py-2"
+      >
         <TouchableOpacity
           className="flex-row items-center"
           onPress={() => router.back()}
@@ -113,9 +96,13 @@ export default function CreatePostScreen() {
             style={{ height: 50, color: "gray", marginBottom: 4 }}
           >
             <Picker.Item label="Select A Category" value="" />
-            <Picker.Item label="Bikes" value="Bikes" />
-            <Picker.Item label="Electronics" value="Electronics" />
-            <Picker.Item label="Furniture" value="Furniture" />
+            {CATEGORIES.map((category) => (
+              <Picker.Item
+                key={category.id}
+                label={`${category.icon} ${category.name}`}
+                value={category.id}
+              />
+            ))}
           </Picker>
         </View>
 
@@ -135,7 +122,10 @@ export default function CreatePostScreen() {
         </View>
 
         <Text className="text-lg font-semibold mb-2">Images</Text>
-        <TouchableOpacity className="border border-gray-300 rounded-lg p-4 flew-row justify-center items-center mb-6">
+        <TouchableOpacity
+          className="border border-gray-300 rounded-lg p-4 
+        flew-row justify-center items-center mb-6"
+        >
           <CameraIcon size={24} color="gray" />
           <Text className="ml-2 text-gray-500">Upload Images</Text>
         </TouchableOpacity>

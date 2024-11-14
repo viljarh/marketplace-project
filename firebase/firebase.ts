@@ -8,6 +8,7 @@ import {
   onAuthStateChanged,
   initializeAuth,
   getReactNativePersistence,
+  prodErrorMap,
 } from "firebase/auth";
 import {
   Timestamp,
@@ -163,6 +164,21 @@ export async function fetchProductsByCategory(
     id: doc.id,
     ...doc.data(),
   })) as Product[];
+}
+
+export async function fetchCategoriesFromProducts(): Promise<string[]> {
+  const productsCollection = collection(db, "products");
+  const querySnapshot = await getDocs(productsCollection);
+
+  const categoriesSet = new Set<string>();
+
+  querySnapshot.forEach((doc) => {
+    const product = doc.data() as Product;
+    if (product.category) {
+      categoriesSet.add(product.category);
+    }
+  });
+  return Array.from(categoriesSet);
 }
 
 export { db };

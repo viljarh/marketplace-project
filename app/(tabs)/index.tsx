@@ -1,5 +1,6 @@
+import { CATEGORIES } from "constants/constants";
 import { router } from "expo-router";
-import { fetchCategories, fetchProducts } from "firebase/firebase";
+import { fetchCategoriesFromProducts, fetchProducts } from "firebase/firebase";
 import { Category, Product } from "firebase/firebaseTypes";
 import { useEffect, useState } from "react";
 import {
@@ -18,7 +19,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Index() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,8 +27,8 @@ export default function Index() {
         const data = await fetchProducts();
         setProducts(data);
 
-        const categoryData = await fetchCategories();
-        setCategories(categoryData);
+        const categories = await fetchCategoriesFromProducts();
+        setCategories(categories);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -70,14 +71,16 @@ export default function Index() {
 
         {/* Categories */}
         <View className="flex-row flex-wrap justify-evenly mx-4 mb-4">
-          {categories.map((category) => (
+          {CATEGORIES.map((category) => (
             <TouchableOpacity
               key={category.id}
               className="w-1/4 p-2"
               onPress={() => router.push("/feed")}
             >
-              <View className="w-full h-20 bg-gray-200 rounded-lg" />
-              <Text className="text-center mt-2">{category.categoryName}</Text>
+              <View className="w-full h-20 bg-gray-200 rounded-lg flex items-center justify-center">
+                <Text style={{ fontSize: 24 }}>{category.icon}</Text>
+              </View>
+              <Text className="text-center mt-2">{category.name}</Text>
             </TouchableOpacity>
           ))}
         </View>
