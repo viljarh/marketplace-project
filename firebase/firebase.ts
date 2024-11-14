@@ -35,7 +35,6 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID!,
 };
 
-// Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 export const auth: Auth = initializeAuth(app, {
@@ -54,13 +53,11 @@ export const signUp = async (
       password,
     );
     const user = userCredential.user;
-
     const userRef = doc(db, "users", user.uid);
     await setDoc(userRef, {
       email: user.email,
       createdAt: new Date(),
     });
-
     console.log("User created and saved to FireStore!");
 
     return user;
@@ -168,7 +165,6 @@ export async function fetchProductByCategory(
     id: doc.id,
     ...doc.data(),
   })) as Product[];
-  console.log("Products fetched for category:", category, products);
   return products;
 }
 

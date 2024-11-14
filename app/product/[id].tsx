@@ -14,6 +14,12 @@ import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Product } from "firebase/firebaseTypes";
 import { fetchProductsById } from "firebase/firebase";
+import {
+  COLORS,
+  FONT_SIZES,
+  SPACING,
+  BORDER_RADIUS,
+} from "constants/constants";
 
 export default function ProductDetails() {
   const [product, setProduct] = useState<Product | null>(null);
@@ -33,63 +39,56 @@ export default function ProductDetails() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" color="3A82F6" />
+      <SafeAreaView style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
       </SafeAreaView>
     );
   }
 
   if (!product) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center">
-        <Text>No product found</Text>
+      <SafeAreaView style={styles.loadingContainer}>
+        <Text style={styles.noProductText}>No product found</Text>
       </SafeAreaView>
     );
   }
+
   return (
-    <SafeAreaView>
-      <View
-        className="flex-row justify-between items-center px-4 border-b
-        border-gray-300 py-2"
-      >
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
         <TouchableOpacity
-          className="flex-row items-center"
+          style={styles.backButton}
           onPress={() => router.back()}
         >
-          <ChevronLeftIcon size={20} color="gray" />
-          <Text className="text-gray-500 ml-1">Back</Text>
+          <ChevronLeftIcon size={20} color={COLORS.textSecondary} />
+          <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-lg font-semibold">Product details</Text>
-        <View style={{ width: 50 }} />
+        <Text style={styles.headerTitle}>Product details</Text>
+        <View style={styles.headerSpacer} />
       </View>
+
       <ScrollView style={styles.container}>
         <Image
           style={styles.image}
           source={
             product.imageUrl
-              ? {
-                  uri: product.imageUrl,
-                }
+              ? { uri: product.imageUrl }
               : require("../../assets/images/placeholder.png")
           }
         />
         <View style={styles.contentContainer}>
-          <Text style={{ fontWeight: 600, fontSize: 18 }}>
-            {product?.title}
-          </Text>
-          <Text style={{ fontSize: 18, color: "#3a82F6", marginVertical: 10 }}>
-            {product?.price} NOK
-          </Text>
+          <Text style={styles.title}>{product?.title}</Text>
+          <Text style={styles.price}>{product?.price} NOK</Text>
           <TouchableOpacity
             style={styles.button}
             onPress={() => Alert.alert("Buy button pressed")}
           >
-            <Text style={{ color: "white" }}>Buy product</Text>
+            <Text style={styles.buttonText}>Buy product</Text>
           </TouchableOpacity>
-          <Text style={{ marginTop: 20, fontWeight: 500 }}>Description</Text>
-          <Text>{product?.description}</Text>
-          <Text style={{ marginTop: 20, fontWeight: 500 }}>Condition</Text>
-          <Text>{product?.condition}</Text>
+          <Text style={styles.sectionTitle}>Description</Text>
+          <Text style={styles.sectionText}>{product?.description}</Text>
+          <Text style={styles.sectionTitle}>Condition</Text>
+          <Text style={styles.sectionText}>{product?.condition}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -97,27 +96,87 @@ export default function ProductDetails() {
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: SPACING.medium,
+    paddingVertical: SPACING.small,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.accent,
+  },
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  backText: {
+    color: COLORS.textSecondary,
+    marginLeft: SPACING.small,
+  },
+  headerTitle: {
+    fontSize: FONT_SIZES.large,
+    fontWeight: "600",
+    color: COLORS.textPrimary,
+  },
+  headerSpacer: {
+    width: 50,
+  },
   container: {
-    height: "100%",
-    flexDirection: "column",
+    flex: 1,
   },
   image: {
     width: "100%",
     height: 300,
-    backgroundColor: "#D9D9D9",
+    backgroundColor: COLORS.accent,
   },
   contentContainer: {
-    width: "100%",
-    height: "100%",
-    padding: 20,
-    backgroundColor: "white",
+    padding: SPACING.medium,
+    backgroundColor: COLORS.white,
+  },
+  title: {
+    fontSize: FONT_SIZES.large,
+    fontWeight: "600",
+    color: COLORS.textPrimary,
+  },
+  price: {
+    fontSize: FONT_SIZES.large,
+    color: COLORS.primary,
+    marginVertical: SPACING.small,
   },
   button: {
-    backgroundColor: "rgb(59, 130, 246)",
+    backgroundColor: COLORS.primary,
     alignItems: "center",
-    height: 36,
     justifyContent: "center",
-    borderRadius: 6,
-    marginTop: 20,
+    height: 36,
+    borderRadius: BORDER_RADIUS.medium,
+    marginTop: SPACING.medium,
+  },
+  buttonText: {
+    color: COLORS.white,
+    fontWeight: "500",
+  },
+  sectionTitle: {
+    fontSize: FONT_SIZES.medium,
+    fontWeight: "500",
+    color: COLORS.textPrimary,
+    marginTop: SPACING.large,
+  },
+  sectionText: {
+    fontSize: FONT_SIZES.medium,
+    color: COLORS.textPrimary,
+    marginTop: SPACING.small,
+  },
+  noProductText: {
+    color: COLORS.textSecondary,
+    fontSize: FONT_SIZES.medium,
   },
 });
