@@ -2,7 +2,7 @@ import { CATEGORIES } from "constants/constants";
 import { router } from "expo-router";
 import { fetchCategoriesFromProducts, fetchProducts } from "firebase/firebase";
 import { Category, Product } from "firebase/firebaseTypes";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -15,28 +15,33 @@ import {
 } from "react-native";
 import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function Index() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<string[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchProducts();
-        setProducts(data);
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await fetchProducts();
+      setProducts(data);
 
-        const categories = await fetchCategoriesFromProducts();
-        setCategories(categories);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+      const categoriesData = await fetchCategoriesFromProducts();
+      setCategories(categoriesData);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [fetchData]),
+  );
 
   if (loading) {
     return (

@@ -65,7 +65,13 @@ export default function ProductDetails() {
       <ScrollView style={styles.container}>
         <Image
           style={styles.image}
-          source={require("../../assets/images/placeholder.png")}
+          source={
+            product.imageUrl
+              ? {
+                  uri: product.imageUrl,
+                }
+              : require("../../assets/images/placeholder.png")
+          }
         />
         <View style={styles.contentContainer}>
           <Text style={{ fontWeight: 600, fontSize: 18 }}>

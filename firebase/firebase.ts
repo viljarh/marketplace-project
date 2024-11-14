@@ -23,6 +23,8 @@ import {
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Category, Product } from "./firebaseTypes";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import uuid from "react-native-uuid";
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY!,
@@ -39,6 +41,7 @@ const db = getFirestore(app);
 export const auth: Auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
+const storage = getStorage(app);
 
 export const signUp = async (
   email: string,
@@ -120,14 +123,16 @@ export const handleCreatePost = async (
   price: string,
   category: string,
   condition: string,
+  imageUrls: string[],
 ): Promise<string | null> => {
-  const productData: Omit<Product, "id"> = {
+  const productData = {
     title,
     description,
     price,
     category,
     condition,
     createdAt: Timestamp.now().toDate(),
+    imageUrls,
   };
 
   try {
@@ -181,5 +186,16 @@ export async function fetchCategoriesFromProducts(): Promise<string[]> {
   });
   return Array.from(categoriesSet);
 }
+
+export const uploadImageToFirebase = async (uri: string): Promise<string> => {
+  const response = await fetch(uri);
+  const blob = await response.blob();
+  const imageRef = ref(storage, `images/${uuid.v4()}`);
+
+  await uploadBytes(imageRef, blob);
+  const downloadUrl = await getDownloadURL(imageRef);
+
+  return downloadUrl;
+};
 
 export { db };

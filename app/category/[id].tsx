@@ -35,7 +35,6 @@ export default function FeedPage() {
   useEffect(() => {
     const fetchCategoryProducts = async () => {
       setLoading(true);
-      console.log("Fetching products for categoryId:", categoryId);
       try {
         const data = await fetchProductByCategory(categoryId as string);
         setProducts(data);
@@ -117,10 +116,17 @@ export default function FeedPage() {
                   })
                 }
               >
-                <View className="w-full h-40 bg-gray-200 rounded-lg justify-center items-center">
+                <View
+                  className="w-full h-40 bg-gray-200 rounded-lg 
+                justify-center items-center"
+                >
                   <Image
-                    source={require("../../assets/images/placeholder.png")}
                     style={{ width: "100%", height: "100%", borderRadius: 8 }}
+                    source={
+                      product.imageUrl
+                        ? { uri: product.imageUrl }
+                        : require("../../assets/images/placeholder.png")
+                    }
                   />
                 </View>
                 <Text className="text-center font-semibold mt-2">
