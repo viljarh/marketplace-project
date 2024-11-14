@@ -35,7 +35,6 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID!,
 };
 
-// Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 export const auth: Auth = initializeAuth(app, {
@@ -168,7 +167,6 @@ export async function fetchProductByCategory(
     id: doc.id,
     ...doc.data(),
   })) as Product[];
-  console.log("Products fetched for category:", category, products);
   return products;
 }
 
