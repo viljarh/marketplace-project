@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Button, TextInput, StyleSheet } from "react-native";
+import { View, Text, Button, TextInput, StyleSheet, Alert } from "react-native";
 import { useSession } from "./ctx";
 import { router } from "expo-router";
 
@@ -10,11 +10,12 @@ export default function SignIn() {
   const [error, setError] = useState<string | null>(null);
 
   const handleSignIn = async () => {
+    
     try {
       await signIn(email, password);
       router.replace("/");
     } catch (err) {
-      setError("Failed to sign in");
+      handleFirebaseError(err);
     }
   };
 
@@ -23,35 +24,66 @@ export default function SignIn() {
       await signUp(email, password);
       router.replace("/");
     } catch (err) {
-      setError("Failed to sign up");
+      handleFirebaseError(err);
     }
+  };
+
+  const handleFirebaseError = (err: any) => {
+    let message;
+    switch (err.code) {
+      case "auth/invalid-credential":
+        message = "The provided credentials are invalid. Please try again.";
+        break;
+      case "auth/user-not-found":
+        message = "No user found with this email.";
+        break;
+      case "auth/wrong-password":
+        message = "The password is incorrect. Please try again.";
+        break;
+      case "auth/too-many-requests":
+        message = "Too many attempts. Please try again later.";
+        break;
+      case "auth/invalid-email":
+        message = "The email address is not valid.";
+        break;
+      default:
+        message = "Failed to sign in. Please try again.";
+    }
+    setError(message);
+    Alert.alert("Error", message, [{ text: "OK", onPress: () => setError(null) }]);
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign In</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, error ? styles.inputError : null]}
         placeholder="Email"
         value={email}
-        onChangeText={setEmail}
+        onChangeText={(text) => {
+          setEmail(text);
+          setError(null);
+        }}
         keyboardType="email-address"
         autoCapitalize="none"
       />
       <TextInput
-        style={styles.input}
+        style={[styles.input, error ? styles.inputError : null]}
         placeholder="Password"
         value={password}
-        onChangeText={setPassword}
+        onChangeText={(text) => {
+          setPassword(text);
+          setError(null);
+        }}
         secureTextEntry
       />
-      {error && <Text style={styles.error}>{error}</Text>}
+      {error && <Text style={styles.errorText}>{error}</Text>}
       <Button
         title={loading ? "Loading..." : "Sign In"}
         onPress={handleSignIn}
         disabled={loading}
       />
-      {error && <Button title="Sign Up" onPress={handleSignUp} />}
+      <Button title="Sign Up" onPress={handleSignUp} disabled={loading} />
     </View>
   );
 }
@@ -76,8 +108,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     paddingLeft: 10,
   },
-  error: {
+  inputError: {
+    borderColor: "red",
+  },
+  errorText: {
     color: "red",
     marginBottom: 10,
+    textAlign: "center",
   },
 });
