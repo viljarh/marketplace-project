@@ -53,13 +53,11 @@ export const signUp = async (
       password,
     );
     const user = userCredential.user;
-
     const userRef = doc(db, "users", user.uid);
     await setDoc(userRef, {
       email: user.email,
       createdAt: new Date(),
     });
-
     console.log("User created and saved to FireStore!");
 
     return user;

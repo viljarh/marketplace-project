@@ -1,8 +1,4 @@
-import { CATEGORIES } from "constants/constants";
-import { router } from "expo-router";
-import { fetchCategoriesFromProducts, fetchProducts } from "firebase/firebase";
-import { Category, Product } from "firebase/firebaseTypes";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -12,25 +8,33 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  StyleSheet,
 } from "react-native";
 import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
+import {
+  COLORS,
+  FONT_SIZES,
+  SPACING,
+  BORDER_RADIUS,
+  CATEGORIES,
+} from "constants/constants";
 import ProductCard from "components/ProductCard";
+import { fetchCategoriesFromProducts, fetchProducts } from "firebase/firebase";
+import { Product } from "firebase/firebaseTypes";
+import { router } from "expo-router";
 
 export default function Index() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [categories, setCategories] = useState<string[]>([]);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const data = await fetchProducts();
       setProducts(data);
-
-      const categoriesData = await fetchCategoriesFromProducts();
-      setCategories(categoriesData);
+      await fetchCategoriesFromProducts();
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
@@ -46,41 +50,42 @@ export default function Index() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" color="#3A82F6" />
+      <SafeAreaView style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
       </SafeAreaView>
     );
   }
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView className="flex-1">
+      <SafeAreaView style={styles.container}>
         {/* Header */}
-        <View className="flex-row items-center justify-between p-4">
-          <Text className="text-2xl font-bold">
-            Market<Text className="text-blue-500">Place</Text>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>
+            Market<Text style={styles.headerTitleAccent}>Place</Text>
           </Text>
-          <BellIcon size={24} color="gray" />
+          <BellIcon size={24} color={COLORS.textSecondary} />
         </View>
 
         {/* Search Bar */}
-        <View className="mx-4 mb-4">
-          <View className="flex-row items-center bg-gray-100 rounded-lg p-2 border border-gray-300">
-            <MagnifyingGlassIcon size={20} color="gray" />
+        <View style={styles.searchContainer}>
+          <View style={styles.searchBar}>
+            <MagnifyingGlassIcon size={20} color={COLORS.textSecondary} />
             <TextInput
               autoCapitalize="none"
-              className="ml-2 flex-1"
+              style={styles.searchInput}
               placeholder="Search"
-              placeholderTextColor="gray"
+              placeholderTextColor={COLORS.textSecondary}
             />
           </View>
         </View>
 
         {/* Categories */}
-        <View className="flex-row flex-wrap justify-evenly mx-4 mb-4">
+        <View style={styles.categoriesContainer}>
           {CATEGORIES.map((category) => (
             <TouchableOpacity
               key={category.id}
-              className="w-1/4 p-2"
+              style={styles.categoryButton}
               onPress={() =>
                 router.push({
                   pathname: "/category/[id]",
@@ -88,29 +93,23 @@ export default function Index() {
                 })
               }
             >
-              <View className="w-full h-20 bg-gray-200 rounded-lg flex items-center justify-center">
-                <Text style={{ fontSize: 24 }}>{category.icon}</Text>
+              <View style={styles.categoryIconContainer}>
+                <Text style={styles.categoryIcon}>{category.icon}</Text>
               </View>
-              <Text className="text-center mt-2">{category.name}</Text>
+              <Text style={styles.categoryName}>{category.name}</Text>
             </TouchableOpacity>
           ))}
         </View>
 
         {/* Recommended Section */}
-        <View className="flex-row justify-between items-center px-4 mb-4">
-          <Text className="text-lg font-semibold">Recommended</Text>
-          <Text className="text-sm text-gray-500">See all</Text>
+        <View style={styles.recommendedHeader}>
+          <Text style={styles.recommendedTitle}>Recommended</Text>
+          <Text style={styles.seeAll}>See all</Text>
         </View>
 
         {/* Scrollable Recommended Items */}
-        <ScrollView
-          contentContainerStyle={{
-            paddingHorizontal: 16,
-            flexDirection: "row",
-            flexWrap: "wrap",
-          }}
-        >
-          {products.map((product) => (
+        <ScrollView contentContainerStyle={styles.recommendedContainer}>
+          {products.slice(0, 10).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </ScrollView>
@@ -118,3 +117,98 @@ export default function Index() {
     </TouchableWithoutFeedback>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: SPACING.medium,
+  },
+  headerTitle: {
+    fontSize: FONT_SIZES.large,
+    fontWeight: "bold",
+    color: COLORS.textPrimary,
+  },
+  headerTitleAccent: {
+    color: COLORS.primary,
+  },
+  searchContainer: {
+    paddingHorizontal: SPACING.medium,
+    marginBottom: SPACING.medium,
+  },
+  searchBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: COLORS.secondary,
+    borderRadius: BORDER_RADIUS.medium,
+    padding: SPACING.small,
+    borderColor: COLORS.accent,
+    borderWidth: 1,
+  },
+  searchInput: {
+    flex: 1,
+    marginLeft: SPACING.small,
+    color: COLORS.textPrimary,
+    fontSize: FONT_SIZES.medium,
+  },
+  categoriesContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    paddingHorizontal: SPACING.medium,
+    marginBottom: SPACING.medium,
+  },
+  categoryButton: {
+    width: "23%",
+    alignItems: "center",
+    marginBottom: SPACING.medium,
+  },
+  categoryIconContainer: {
+    width: "100%",
+    height: 80,
+    backgroundColor: COLORS.secondary,
+    borderRadius: BORDER_RADIUS.medium,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  categoryIcon: {
+    fontSize: FONT_SIZES.large,
+  },
+  categoryName: {
+    marginTop: SPACING.small,
+    textAlign: "center",
+    color: COLORS.textPrimary,
+    fontSize: FONT_SIZES.medium,
+  },
+  recommendedHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: SPACING.medium,
+    marginBottom: SPACING.small,
+  },
+  recommendedTitle: {
+    fontSize: FONT_SIZES.large,
+    fontWeight: "bold",
+    color: COLORS.textPrimary,
+  },
+  seeAll: {
+    fontSize: FONT_SIZES.small,
+    color: COLORS.textSecondary,
+  },
+  recommendedContainer: {
+    paddingHorizontal: SPACING.medium,
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+});
