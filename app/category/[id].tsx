@@ -8,6 +8,7 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import {
   ChevronLeftIcon,
@@ -20,20 +21,23 @@ import BottomSheet, {
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Product } from "firebase/firebaseTypes";
-import { fetchProductsByCategory } from "firebase/firebase";
+import { Product } from "../../firebase/firebaseTypes";
+import { fetchProductByCategory } from "firebase/firebase";
 
 export default function FeedPage() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const { categoryId, categoryName } = useLocalSearchParams();
+  const params = useLocalSearchParams();
+  const categoryId = params.id as string;
+  const categoryName = params.categoryName as string | undefined;
 
   useEffect(() => {
     const fetchCategoryProducts = async () => {
       setLoading(true);
+      console.log("Fetching products for categoryId:", categoryId);
       try {
-        const data = await fetchProductsByCategory(categoryId as string);
+        const data = await fetchProductByCategory(categoryId as string);
         setProducts(data);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -48,10 +52,6 @@ export default function FeedPage() {
   const openBottomSheet = () => {
     bottomSheetRef.current?.expand();
   };
-
-  // const closeBottomSheet = () => {
-  //   bottomSheetRef.current?.close();
-  // };
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
@@ -83,7 +83,10 @@ export default function FeedPage() {
         </View>
 
         <View className="mx-6 mb-4">
-          <View className="flex-row items-center bg-gray-100 rounded-lg p-2 border border-gray-300">
+          <View
+            className="flex-row items-center bg-gray-100 rounded-lg p-2 
+          border border-gray-300"
+          >
             <MagnifyingGlassIcon size={20} color="gray" />
             <TextInput
               autoCapitalize="none"
@@ -95,21 +98,47 @@ export default function FeedPage() {
           <Text className="font-semibold mt-3">{categoryName}</Text>
         </View>
 
-        <ScrollView
-          contentContainerStyle={{
-            paddingHorizontal: 16,
-            flexDirection: "row",
-            flexWrap: "wrap",
-          }}
-        >
-          {products.map((product) => (
-            <View key={product.id} className="w-1/2 p-2">
-              <View className="w-full h-40 bg-gray-200 rounded-lg" />
-              <Text>{product.title}</Text>
-              <Text>{product.price} NOK</Text>
-            </View>
-          ))}
-        </ScrollView>
+        {products.length > 0 ? (
+          <ScrollView
+            contentContainerStyle={{
+              paddingHorizontal: 16,
+              flexDirection: "row",
+              flexWrap: "wrap",
+            }}
+          >
+            {products.map((product) => (
+              <TouchableOpacity
+                key={product.id}
+                className="w-1/2 p-2"
+                onPress={() =>
+                  router.push({
+                    pathname: "/product/[id]",
+                    params: { id: product.id },
+                  })
+                }
+              >
+                <View className="w-full h-40 bg-gray-200 rounded-lg justify-center items-center">
+                  <Image
+                    source={require("../../assets/images/placeholder.png")}
+                    style={{ width: "100%", height: "100%", borderRadius: 8 }}
+                  />
+                </View>
+                <Text className="text-center font-semibold mt-2">
+                  {product.title}
+                </Text>
+                <Text className="text-center text-gray-600">
+                  {product.price} NOK
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        ) : (
+          <View className="flex-1 justify-center items-center">
+            <Text className="text-gray-500">
+              No products found in this category.
+            </Text>
+          </View>
+        )}
 
         <BottomSheet
           ref={bottomSheetRef}
@@ -122,6 +151,7 @@ export default function FeedPage() {
         >
           <BottomSheetView style={styles.contentContainer}>
             <Text style={styles.modalText}>Filter Options</Text>
+            {/* Add filter options here */}
           </BottomSheetView>
         </BottomSheet>
       </SafeAreaView>
