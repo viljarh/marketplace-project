@@ -3,12 +3,15 @@ import { View, Text, Button, TextInput, StyleSheet, Alert } from "react-native";
 import { useSession } from "./ctx";
 import { router } from "expo-router";
 
+
 export default function SignIn() {
   const { signIn, signUp, loading } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+
+ 
   const handleSignIn = async () => {
     
     try {
