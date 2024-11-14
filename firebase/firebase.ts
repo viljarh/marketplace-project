@@ -194,4 +194,17 @@ export const uploadImageToFirebase = async (uri: string): Promise<string> => {
   return downloadUrl;
 };
 
+export const fetchPostsByUser = async (userId: string): Promise<Product[]> => {
+  const postsRef = collection(db, "products");
+  const q = query(postsRef, where("userId", "==", userId));
+  const querySnapshot = await getDocs(q);
+
+  const posts: Product[] = [];
+  querySnapshot.forEach((doc) => {
+    posts.push({ id: doc.id, ...doc.data() } as Product);
+  });
+
+  return posts;
+};
+
 export { db };

@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
     paddingHorizontal: SPACING.medium,
-    marginBottom: SPACING.medium,
+    marginBottom: SPACING.small,
   },
   categoryButton: {
     width: "23%",
@@ -182,13 +182,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   categoryIcon: {
-    fontSize: FONT_SIZES.large,
+    fontSize: FONT_SIZES.icons,
   },
   categoryName: {
     marginTop: SPACING.small,
     textAlign: "center",
     color: COLORS.textPrimary,
-    fontSize: FONT_SIZES.medium,
+    fontSize: FONT_SIZES.small,
   },
   recommendedHeader: {
     flexDirection: "row",
