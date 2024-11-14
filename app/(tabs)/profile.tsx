@@ -43,7 +43,10 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.menuContainer}>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => router.push("/my-posts")}
+          >
             <Text style={styles.menuText}>My Posts</Text>
             <DocumentIcon size={24} color={COLORS.textSecondary} />
           </TouchableOpacity>

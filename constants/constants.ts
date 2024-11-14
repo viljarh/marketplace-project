@@ -4,13 +4,13 @@ export const CATEGORIES = [
   { id: "bikes", name: "Bikes", icon: "🚲" },
   { id: "fashion", name: "Fashion & Accessories", icon: "👗" },
   { id: "appliances", name: "Home Appliances", icon: "🧺" },
-  { id: "books", name: "Books & Media", icon: "📚" },
+  // { id: "books", name: "Books & Media", icon: "📚" },
   { id: "sports", name: "Sports & Outdoors", icon: "🏕️" },
-  { id: "toys", name: "Toys & Games", icon: "🧸" },
+  // { id: "toys", name: "Toys & Games", icon: "🧸" },
   { id: "automotive", name: "Automotive Parts", icon: "🚗" },
-  { id: "pets", name: "Pet Supplies", icon: "🐾" },
+  // { id: "pets", name: "Pet Supplies", icon: "🐾" },
   { id: "health", name: "Health & Beauty", icon: "💄" },
-  { id: "garden", name: "Garden & Outdoor", icon: "🌻" },
+  // { id: "garden", name: "Garden & Outdoor", icon: "🌻" },
 ];
 
 export const COLORS = {
@@ -27,6 +27,7 @@ export const FONT_SIZES = {
   small: 14,
   medium: 16,
   large: 18,
+  icons: 40,
 };
 
 export const SPACING = {
