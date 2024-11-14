@@ -34,6 +34,23 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const getFriendlyErrorMessage = (errorCode: string): string => {
+    switch (errorCode) {
+      case "auth/invalid-email":
+        return "Invalid email format.";
+      case "auth/user-disabled":
+        return "This account has been disabled.";
+      case "auth/user-not-found":
+        return "No account found with this email.";
+      case "auth/wrong-password":
+        return "Incorrect password. Please try again.";
+      case "auth/email-already-in-use":
+        return "This email is already registered.";
+      default:
+        return "An unexpected error occurred. Please try again.";
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChangeListener((user) => {
       setSession(user);
@@ -44,20 +61,26 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
   const handleSignIn = async (email: string, password: string) => {
     setLoading(true);
-    await signIn(email, password).catch((error) => {
-      console.error("Sign in failed:", error.message);
-      throw error;
-    });
-    setLoading(false);
+    try {
+      await signIn(email, password);
+    } catch (error: any) {
+      const errorMessage = getFriendlyErrorMessage(error.code);
+      throw new Error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSignUp = async (email: string, password: string) => {
     setLoading(true);
-    await signUp(email, password).catch((error) => {
-      console.error("Sign up failed:", error.message);
-      throw error;
-    });
-    setLoading(false);
+    try {
+      await signUp(email, password);
+    } catch (error: any) {
+      const errorMessage = getFriendlyErrorMessage(error.code);
+      throw new Error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSignOut = async () => {
