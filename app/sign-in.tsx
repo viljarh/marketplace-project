@@ -15,7 +15,7 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [isSignUpMode, setIsSignUpMode] = useState(false); // Ny tilstand for modus
+  const [isSignUpMode, setIsSignUpMode] = useState(false); 
 
   const handleAuth = async () => {
     setError(null);
