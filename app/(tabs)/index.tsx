@@ -75,7 +75,12 @@ export default function Index() {
             <TouchableOpacity
               key={category.id}
               className="w-1/4 p-2"
-              onPress={() => router.push("/feed")}
+              onPress={() =>
+                router.push({
+                  pathname: "/category/[id]",
+                  params: { id: category.id },
+                })
+              }
             >
               <View className="w-full h-20 bg-gray-200 rounded-lg flex items-center justify-center">
                 <Text style={{ fontSize: 24 }}>{category.icon}</Text>
