@@ -23,8 +23,9 @@ import BottomSheet, {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Product } from "../../firebase/firebaseTypes";
 import { fetchProductByCategory } from "firebase/firebase";
+import ProductCard from "components/ProductCard";
 
-export default function FeedPage() {
+export default function CategoryFeed() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -106,36 +107,7 @@ export default function FeedPage() {
             }}
           >
             {products.map((product) => (
-              <TouchableOpacity
-                key={product.id}
-                className="w-1/2 p-2"
-                onPress={() =>
-                  router.push({
-                    pathname: "/product/[id]",
-                    params: { id: product.id },
-                  })
-                }
-              >
-                <View
-                  className="w-full h-40 bg-gray-200 rounded-lg 
-                justify-center items-center"
-                >
-                  <Image
-                    style={{ width: "100%", height: "100%", borderRadius: 8 }}
-                    source={
-                      product.imageUrl
-                        ? { uri: product.imageUrl }
-                        : require("../../assets/images/placeholder.png")
-                    }
-                  />
-                </View>
-                <Text className="text-center font-semibold mt-2">
-                  {product.title}
-                </Text>
-                <Text className="text-center text-gray-600">
-                  {product.price} NOK
-                </Text>
-              </TouchableOpacity>
+              <ProductCard key={product.id} product={product} />
             ))}
           </ScrollView>
         ) : (

@@ -16,6 +16,7 @@ import {
 import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
+import ProductCard from "components/ProductCard";
 
 export default function Index() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -110,25 +111,7 @@ export default function Index() {
           }}
         >
           {products.map((product) => (
-            <TouchableOpacity
-              key={product.id}
-              className="w-1/2 p-2"
-              onPress={() =>
-                router.push({
-                  pathname: "/product/[id]",
-                  params: { id: product.id },
-                })
-              }
-            >
-              <View className="w-full h-40 bg-gray-200 rounded-lg">
-                <Text className="text-center font-semibold mt-2">
-                  {product.title}
-                </Text>
-                <Text className="text-center text-gray-600">
-                  {product.price} NOK
-                </Text>
-              </View>
-            </TouchableOpacity>
+            <ProductCard key={product.id} product={product} />
           ))}
         </ScrollView>
       </SafeAreaView>
