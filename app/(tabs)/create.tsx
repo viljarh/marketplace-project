@@ -117,6 +117,7 @@ export default function CreatePostScreen() {
           style={styles.input}
           placeholder="Enter title"
           value={title}
+          autoCapitalize={"none"}
           onChangeText={setTitle}
         />
 
