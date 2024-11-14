@@ -44,24 +44,20 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
   const handleSignIn = async (email: string, password: string) => {
     setLoading(true);
-    try {
-      await signIn(email, password);
-    } catch (error) {
-      console.error("Sign in failed:", error);
-    } finally {
-      setLoading(false);  
-    }
+    await signIn(email, password).catch((error) => {
+      console.error("Sign in failed:", error.message);
+      throw error;
+    });
+    setLoading(false);
   };
-  
+
   const handleSignUp = async (email: string, password: string) => {
     setLoading(true);
-    try {
-      await signUp(email, password);
-    } catch (error) {
-      console.error("Sign up failed:", error);
-    } finally {
-      setLoading(false);  
-    }
+    await signUp(email, password).catch((error) => {
+      console.error("Sign up failed:", error.message);
+      throw error;
+    });
+    setLoading(false);
   };
 
   const handleSignOut = async () => {
