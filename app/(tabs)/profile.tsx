@@ -1,6 +1,13 @@
+import React from "react";
 import { useSession } from "app/ctx";
 import { router } from "expo-router";
-import { Text, View, TouchableOpacity, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import {
   ArrowRightEndOnRectangleIcon,
   Cog6ToothIcon,
@@ -9,6 +16,7 @@ import {
   UserCircleIcon,
 } from "react-native-heroicons/outline";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { COLORS, FONT_SIZES, SPACING } from "constants/constants";
 
 export default function ProfileScreen() {
   const { session, signOut } = useSession();
@@ -23,60 +31,114 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1">
-      <View
-        className="flex-row justify-center items-center px-4 mb-4 border-b
-      border-gray-300 py-2"
-      >
-        <Text className="text-lg font-semibold">Profile</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Profile</Text>
       </View>
 
-      <ScrollView className="flex-1">
-        <View className="flex items-center my-6">
-          <UserCircleIcon size={64} color="#3A82F6" />
-          <Text className="text-lg font-semibold mt-2">
-            {session?.email || "User"}
-          </Text>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.userInfoContainer}>
+          <UserCircleIcon size={64} color={COLORS.primary} />
+          <Text style={styles.userName}>{session?.email || "User"}</Text>
         </View>
 
-        <View className="p-4">
+        <View style={styles.menuContainer}>
           <TouchableOpacity
-            className="flex-row justify-between items-center 
-          py-4 border-t border-gray-200"
+            style={styles.menuItem}
+            onPress={() => router.push("/my-posts")}
           >
-            <Text className="text-base">My Posts</Text>
-            <DocumentIcon size={24} color="gray" />
+            <Text style={styles.menuText}>My Posts</Text>
+            <DocumentIcon size={24} color={COLORS.textSecondary} />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            className="flex-row justify-between items-center 
-          py-4 border-t border-gray-200"
-          >
-            <Text className="text-base">My Favorites</Text>
-            <HeartIcon size={24} color="gray" />
+          <TouchableOpacity style={styles.menuItem}>
+            <Text style={styles.menuText}>My Favorites</Text>
+            <HeartIcon size={24} color={COLORS.textSecondary} />
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => router.push("/settings")}
-            className="flex-row justify-between items-center py-4 border-t
-            border-gray-200"
+            style={styles.menuItem}
           >
-            <Text className="text-base">Settings</Text>
-            <Cog6ToothIcon size={24} color="gray" />
+            <Text style={styles.menuText}>Settings</Text>
+            <Cog6ToothIcon size={24} color={COLORS.textSecondary} />
           </TouchableOpacity>
         </View>
       </ScrollView>
 
-      <View className="p-4">
-        <TouchableOpacity
-          className="flex-row justify-between items-center py-4 border-t 
-          border-gray-200"
-          onPress={handleSignOut}
-        >
-          <Text className="text-red-500 font-semibold">Log Out</Text>
-          <ArrowRightEndOnRectangleIcon size={24} color="red" />
+      <View style={styles.logoutContainer}>
+        <TouchableOpacity onPress={handleSignOut} style={styles.logoutButton}>
+          <Text style={styles.logoutText}>Log Out</Text>
+          <ArrowRightEndOnRectangleIcon size={24} color={COLORS.error} />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: SPACING.medium,
+    paddingVertical: SPACING.small,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.accent,
+    marginBottom: SPACING.medium,
+  },
+  headerText: {
+    fontSize: FONT_SIZES.large,
+    fontWeight: "600",
+    color: COLORS.textPrimary,
+  },
+  scrollContainer: {
+    paddingHorizontal: SPACING.medium,
+  },
+  userInfoContainer: {
+    alignItems: "center",
+    marginVertical: SPACING.large,
+  },
+  userName: {
+    fontSize: FONT_SIZES.large,
+    fontWeight: "600",
+    color: COLORS.textPrimary,
+    marginTop: SPACING.small,
+  },
+  menuContainer: {
+    paddingHorizontal: SPACING.medium,
+  },
+  menuItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: SPACING.medium,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.accent,
+  },
+  menuText: {
+    fontSize: FONT_SIZES.medium,
+    color: COLORS.textPrimary,
+  },
+  logoutContainer: {
+    paddingHorizontal: SPACING.medium,
+    paddingBottom: SPACING.medium,
+  },
+  logoutButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: SPACING.medium,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.accent,
+  },
+  logoutText: {
+    color: COLORS.error,
+    fontSize: FONT_SIZES.medium,
+    fontWeight: "600",
+  },
+});

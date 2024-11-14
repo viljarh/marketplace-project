@@ -8,7 +8,6 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
-  Image,
 } from "react-native";
 import {
   ChevronLeftIcon,
@@ -23,8 +22,15 @@ import BottomSheet, {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Product } from "../../firebase/firebaseTypes";
 import { fetchProductByCategory } from "firebase/firebase";
+import ProductCard from "components/ProductCard";
+import {
+  COLORS,
+  FONT_SIZES,
+  SPACING,
+  BORDER_RADIUS,
+} from "constants/constants";
 
-export default function FeedPage() {
+export default function CategoryFeed() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,7 +41,6 @@ export default function FeedPage() {
   useEffect(() => {
     const fetchCategoryProducts = async () => {
       setLoading(true);
-      console.log("Fetching products for categoryId:", categoryId);
       try {
         const data = await fetchProductByCategory(categoryId as string);
         setProducts(data);
@@ -59,82 +64,50 @@ export default function FeedPage() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" color="#3A82F6" />
+      <SafeAreaView style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
       </SafeAreaView>
     );
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <View className="flex-row justify-between items-center px-4 mb-4 py-2">
+    <GestureHandlerRootView style={styles.container}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
           <TouchableOpacity
-            className="flex-row items-center"
+            style={styles.backButton}
             onPress={() => router.back()}
           >
-            <ChevronLeftIcon size={20} color="gray" />
-            <Text className="text-gray-500 ml-1">Back</Text>
+            <ChevronLeftIcon size={20} color={COLORS.textSecondary} />
+            <Text style={styles.backText}>Back</Text>
           </TouchableOpacity>
-
           <TouchableOpacity onPress={openBottomSheet}>
-            <FunnelIcon size={20} color="gray" />
+            <FunnelIcon size={20} color={COLORS.textSecondary} />
           </TouchableOpacity>
         </View>
 
-        <View className="mx-6 mb-4">
-          <View
-            className="flex-row items-center bg-gray-100 rounded-lg p-2 
-          border border-gray-300"
-          >
-            <MagnifyingGlassIcon size={20} color="gray" />
+        <View style={styles.searchContainer}>
+          <View style={styles.searchBar}>
+            <MagnifyingGlassIcon size={20} color={COLORS.textSecondary} />
             <TextInput
               autoCapitalize="none"
-              className="ml-2 flex-1"
+              style={styles.searchInput}
               placeholder="Search"
-              placeholderTextColor="gray"
+              placeholderTextColor={COLORS.textSecondary}
             />
           </View>
-          <Text className="font-semibold mt-3">{categoryName}</Text>
+          <Text style={styles.categoryName}>{categoryName}</Text>
         </View>
 
         {products.length > 0 ? (
-          <ScrollView
-            contentContainerStyle={{
-              paddingHorizontal: 16,
-              flexDirection: "row",
-              flexWrap: "wrap",
-            }}
-          >
+          <ScrollView contentContainerStyle={styles.productListContainer}>
             {products.map((product) => (
-              <TouchableOpacity
-                key={product.id}
-                className="w-1/2 p-2"
-                onPress={() =>
-                  router.push({
-                    pathname: "/product/[id]",
-                    params: { id: product.id },
-                  })
-                }
-              >
-                <View className="w-full h-40 bg-gray-200 rounded-lg justify-center items-center">
-                  <Image
-                    source={require("../../assets/images/placeholder.png")}
-                    style={{ width: "100%", height: "100%", borderRadius: 8 }}
-                  />
-                </View>
-                <Text className="text-center font-semibold mt-2">
-                  {product.title}
-                </Text>
-                <Text className="text-center text-gray-600">
-                  {product.price} NOK
-                </Text>
-              </TouchableOpacity>
+              <ProductCard key={product.id} product={product} />
             ))}
           </ScrollView>
         ) : (
-          <View className="flex-1 justify-center items-center">
-            <Text className="text-gray-500">
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>
               No products found in this category.
             </Text>
           </View>
@@ -160,34 +133,79 @@ export default function FeedPage() {
 }
 
 const styles = StyleSheet.create({
-  bottomSheet: {
-    width: "100%",
-    backgroundColor: "white",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
   container: {
     flex: 1,
-    backgroundColor: "grey",
+    backgroundColor: COLORS.white,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: SPACING.medium,
+    paddingVertical: SPACING.small,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.accent,
+    marginBottom: SPACING.medium,
+  },
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  backText: {
+    color: COLORS.textSecondary,
+    marginLeft: SPACING.small,
+  },
+  searchContainer: {
+    marginHorizontal: SPACING.medium,
+    marginBottom: SPACING.medium,
+  },
+  searchBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: COLORS.secondary,
+    borderRadius: BORDER_RADIUS.medium,
+    padding: SPACING.small,
+    borderColor: COLORS.accent,
+    borderWidth: 1,
+  },
+  searchInput: {
+    marginLeft: SPACING.small,
+    flex: 1,
+    color: COLORS.textPrimary,
+  },
+  categoryName: {
+    fontSize: FONT_SIZES.medium,
+    fontWeight: "600",
+    color: COLORS.textPrimary,
+    marginTop: SPACING.small,
+  },
+  productListContainer: {
+    paddingHorizontal: SPACING.medium,
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    color: COLORS.textSecondary,
   },
   contentContainer: {
     flex: 1,
-    padding: 36,
+    padding: SPACING.large,
     alignItems: "center",
+  },
+  modalText: {
+    marginBottom: SPACING.small,
+    textAlign: "center",
+    fontSize: FONT_SIZES.large,
+    fontWeight: "bold",
   },
 });

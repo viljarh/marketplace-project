@@ -23,6 +23,8 @@ import {
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Category, Product } from "./firebaseTypes";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import uuid from "react-native-uuid";
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY!,
@@ -33,12 +35,12 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID!,
 };
 
-// Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 export const auth: Auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
+const storage = getStorage(app);
 
 export const signUp = async (
   email: string,
@@ -51,13 +53,11 @@ export const signUp = async (
       password,
     );
     const user = userCredential.user;
-
     const userRef = doc(db, "users", user.uid);
     await setDoc(userRef, {
       email: user.email,
       createdAt: new Date(),
     });
-
     console.log("User created and saved to FireStore!");
 
     return user;
@@ -120,6 +120,7 @@ export const handleCreatePost = async (
   price: string,
   category: string,
   condition: string,
+  imageUrl: string | null,
 ): Promise<string | null> => {
   const productData: Omit<Product, "id"> = {
     title,
@@ -128,6 +129,7 @@ export const handleCreatePost = async (
     category,
     condition,
     createdAt: Timestamp.now().toDate(),
+    imageUrl,
   };
 
   try {
@@ -163,7 +165,6 @@ export async function fetchProductByCategory(
     id: doc.id,
     ...doc.data(),
   })) as Product[];
-  console.log("Products fetched for category:", category, products);
   return products;
 }
 
@@ -181,5 +182,29 @@ export async function fetchCategoriesFromProducts(): Promise<string[]> {
   });
   return Array.from(categoriesSet);
 }
+
+export const uploadImageToFirebase = async (uri: string): Promise<string> => {
+  const response = await fetch(uri);
+  const blob = await response.blob();
+  const imageRef = ref(storage, `images/${uuid.v4()}`);
+
+  await uploadBytes(imageRef, blob);
+  const downloadUrl = await getDownloadURL(imageRef);
+
+  return downloadUrl;
+};
+
+export const fetchPostsByUser = async (userId: string): Promise<Product[]> => {
+  const postsRef = collection(db, "products");
+  const q = query(postsRef, where("userId", "==", userId));
+  const querySnapshot = await getDocs(q);
+
+  const posts: Product[] = [];
+  querySnapshot.forEach((doc) => {
+    posts.push({ id: doc.id, ...doc.data() } as Product);
+  });
+
+  return posts;
+};
 
 export { db };

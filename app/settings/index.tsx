@@ -1,25 +1,56 @@
 import { router } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { COLORS, FONT_SIZES, SPACING } from "constants/constants";
 
 export default function SettingsPage() {
   return (
-    <SafeAreaView className="flex-1">
-      <View
-        className="flex-row justify-between items-center px-4 mb-4 border-b
-      border-gray-300 py-2"
-      >
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
         <TouchableOpacity
-          className="flex-row items-center"
+          style={styles.backButton}
           onPress={() => router.back()}
         >
-          <ChevronLeftIcon size={20} color="gray" />
-          <Text className="text-gray-500 ml-1">Back</Text>
+          <ChevronLeftIcon size={20} color={COLORS.textSecondary} />
+          <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-lg font-semibold">Settings</Text>
-        <View style={{ width: 50 }} />
+        <Text style={styles.headerTitle}>Settings</Text>
+        <View style={styles.headerSpacer} />
       </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: SPACING.medium,
+    paddingVertical: SPACING.small,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.accent,
+  },
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  backText: {
+    color: COLORS.textSecondary,
+    marginLeft: SPACING.small,
+    fontSize: FONT_SIZES.medium,
+  },
+  headerTitle: {
+    fontSize: FONT_SIZES.large,
+    fontWeight: "600",
+    color: COLORS.textPrimary,
+  },
+  headerSpacer: {
+    width: 50,
+  },
+});
