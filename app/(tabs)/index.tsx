@@ -28,24 +28,28 @@ import { router } from "expo-router";
 export default function Index() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const data = await fetchProducts();
-      setProducts(data);
+      const filteredData = data.filter((product) =>
+        product.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setProducts(filteredData);
       await fetchCategoriesFromProducts();
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [searchQuery]);
 
   useFocusEffect(
     useCallback(() => {
       fetchData();
-    }, [fetchData]),
+    }, [fetchData])
   );
 
   if (loading) {
@@ -76,6 +80,8 @@ export default function Index() {
               style={styles.searchInput}
               placeholder="Search"
               placeholderTextColor={COLORS.textSecondary}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
             />
           </View>
         </View>
