@@ -34,6 +34,7 @@ export default function CategoryFeed() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<string | null>(null);
   const params = useLocalSearchParams();
   const categoryId = params.id as string;
   const categoryName = params.categoryName as string | undefined;
@@ -61,6 +62,13 @@ export default function CategoryFeed() {
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
+
+  const applyFilter = (filterType: string) => {
+    setFilter(filterType);
+    bottomSheetRef.current?.close();
+    // Apply the filter logic here
+    // For example, you can sort the products array based on the filterType
+  };
 
   if (loading) {
     return (
@@ -103,7 +111,7 @@ export default function CategoryFeed() {
         <BottomSheet
           ref={bottomSheetRef}
           index={-1}
-          snapPoints={["70%"]}
+          snapPoints={["40%"]}
           onChange={handleSheetChanges}
           backdropComponent={(props) => (
             <BottomSheetBackdrop {...props} pressBehavior="close" />
@@ -111,7 +119,21 @@ export default function CategoryFeed() {
         >
           <BottomSheetView style={styles.contentContainer}>
             <Text style={styles.modalText}>Filter Options</Text>
-            {/* Add filter options here */}
+            <TouchableOpacity onPress={() => applyFilter("newest")}>
+              <Text style={styles.filterOption}>Newest First</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => applyFilter("oldest")}>
+              <Text style={styles.filterOption}>Oldest First</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => applyFilter("mostExpensive")}>
+              <Text style={styles.filterOption}>Most Expensive</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => applyFilter("leastExpensive")}>
+              <Text style={styles.filterOption}>Least Expensive</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => applyFilter("condition")}>
+              <Text style={styles.filterOption}>Condition</Text>
+            </TouchableOpacity>
           </BottomSheetView>
         </BottomSheet>
       </SafeAreaView>
@@ -194,5 +216,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: FONT_SIZES.large,
     fontWeight: "bold",
+  },
+  filterOption: {
+    padding: SPACING.medium,
+    fontSize: FONT_SIZES.medium,
+    color: COLORS.textPrimary,
   },
 });
