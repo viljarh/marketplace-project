@@ -27,6 +27,7 @@ import { router } from "expo-router";
 
 export default function Index() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -37,7 +38,8 @@ export default function Index() {
       const filteredData = data.filter((product) =>
         product.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setProducts(filteredData);
+      setFilteredProducts(filteredData);
+      setProducts(data);
       await fetchCategoriesFromProducts();
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -49,7 +51,7 @@ export default function Index() {
   useFocusEffect(
     useCallback(() => {
       fetchData();
-    }, [fetchData])
+    }, [fetchData]),
   );
 
   if (loading) {
@@ -85,6 +87,26 @@ export default function Index() {
             />
           </View>
         </View>
+
+        {/* Filtered Products List */}
+        {searchQuery.length > 0 && filteredProducts.length > 0 && (
+          <View style={styles.filteredProductsContainer}>
+            {filteredProducts.map((product) => (
+              <TouchableOpacity
+                key={product.id}
+                style={styles.filteredProductItem}
+                onPress={() =>
+                  router.push({
+                    pathname: "/product/[id]",
+                    params: { id: product.id },
+                  })
+                }
+              >
+                <Text style={styles.filteredProductTitle}>{product.title}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
 
         {/* Categories */}
         <View style={styles.categoriesContainer}>
@@ -166,6 +188,19 @@ const styles = StyleSheet.create({
     marginLeft: SPACING.small,
     color: COLORS.textPrimary,
     fontSize: FONT_SIZES.medium,
+  },
+  filteredProductsContainer: {
+    paddingHorizontal: SPACING.medium,
+    marginBottom: SPACING.medium,
+  },
+  filteredProductItem: {
+    paddingVertical: SPACING.small,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.secondary,
+  },
+  filteredProductTitle: {
+    fontSize: FONT_SIZES.medium,
+    color: COLORS.textPrimary,
   },
   categoriesContainer: {
     flexDirection: "row",
