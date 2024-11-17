@@ -86,19 +86,6 @@ export default function CategoryFeed() {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.searchContainer}>
-          <View style={styles.searchBar}>
-            <MagnifyingGlassIcon size={20} color={COLORS.textSecondary} />
-            <TextInput
-              autoCapitalize="none"
-              style={styles.searchInput}
-              placeholder="Search"
-              placeholderTextColor={COLORS.textSecondary}
-            />
-          </View>
-          <Text style={styles.categoryName}>{categoryName}</Text>
-        </View>
-
         {products.length > 0 ? (
           <ScrollView contentContainerStyle={styles.productListContainer}>
             {products.map((product) => (
