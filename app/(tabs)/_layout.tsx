@@ -1,4 +1,4 @@
-import { Tabs, router, } from "expo-router";
+import { Tabs, router } from "expo-router";
 import { TouchableOpacity, View, Text } from "react-native";
 import {
   ChatBubbleBottomCenterTextIcon,
@@ -15,14 +15,13 @@ const TabLayout = () => {
 
   useEffect(() => {
     if (!loading && !session) {
-      router.replace("/sign-in")
+      router.replace("/sign-in");
     }
-  }, [loading, session, router])
+  }, [loading, session, router]);
 
   if (loading) {
-    return <Text>Loading...</Text>
+    return <Text>Loading...</Text>;
   }
-
 
   if (session) {
     return (
@@ -112,9 +111,9 @@ const TabLayout = () => {
           }}
         />
       </Tabs>
-    )
+    );
   }
-  return null
-}
+  return null;
+};
 
 export default TabLayout;
