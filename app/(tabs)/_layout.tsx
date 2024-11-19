@@ -1,5 +1,5 @@
 import { Tabs, router } from "expo-router";
-import { TouchableOpacity, View, Text } from "react-native";
+import { Text } from "react-native";
 import {
   ChatBubbleBottomCenterTextIcon,
   HeartIcon,
@@ -35,6 +35,11 @@ const TabLayout = () => {
             backgroundColor: "white",
             borderTopColor: "#e0e0e0",
             height: 75,
+            justifyContent: "center",
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: -2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 3,
           },
           tabBarLabelStyle: {
             fontSize: 12,
