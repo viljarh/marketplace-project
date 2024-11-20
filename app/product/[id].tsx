@@ -11,25 +11,70 @@ import {
 } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Product } from "firebase/firebaseTypes";
-import { fetchProductsById } from "firebase/firebase";
+import { auth, db, fetchProductsById} from "firebase/firebase";
 import {
   COLORS,
   FONT_SIZES,
   SPACING,
   BORDER_RADIUS,
 } from "constants/constants";
+import { deleteDoc, doc, setDoc , getDoc} from "firebase/firestore";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 export default function ProductDetails() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const { id } = useLocalSearchParams();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
+  };
+
+  const toggleFavorite = async () => {
+    try {
+      const currentUser = auth.currentUser;
+
+      if(!currentUser){
+        Alert.alert('Error! ', 'You must be logged in to favorte a product.');
+        return;
+      }
+
+      if(product?.id){
+        const userId = currentUser.uid;
+        const favoriteId = `${userId}_${product.id}`;
+        const favoritesRef = doc(db, 'favorites', favoriteId);
+
+        const favoriteDoc = await getDoc(favoritesRef);
+
+        if(favoriteDoc.exists()){
+          await deleteDoc(favoritesRef);
+          console.log("Removed from favorites!");
+          setIsFavorited(false);
+        } else {
+          
+          setDoc(favoritesRef, {
+            favoriteId: favoriteId,
+            userId,
+            productId: product?.id,
+            title: product?.title,
+            imageUrl: product?.imageUrl,
+            price: product?.price,
+          });
+          console.log("Added to favorites!");
+          setIsFavorited(true);
+        }
+      } else {
+        console.error("Product Id is missing")
+      }
+    } catch(error){
+      console.log("Error updating favorites: ", error);
+      Alert.alert("Failed to update favorites. Please try again");
+    }
   };
 
   useEffect(() => {
@@ -86,6 +131,15 @@ export default function ProductDetails() {
             }
           />
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.favoriteButton} onPress={toggleFavorite}>
+          <MaterialIcons
+          name="favorite"
+          size={30}
+          color={isFavorited ? 'red' : 'gray'}
+        />
+        </TouchableOpacity>
+        
 
         <View style={styles.contentContainer}>
           <Text style={styles.title}>{product.title}</Text>
@@ -244,5 +298,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: 'black',
+  },
+
+  favoriteButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    backgroundColor: 'white',
+    borderRadius: 50,
+    padding: 5,
+    zIndex: 10,
   },
 });
