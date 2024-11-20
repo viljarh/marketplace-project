@@ -7,6 +7,7 @@ import {
   Alert,
   ScrollView,
   ActivityIndicator,
+  Modal,
 } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { router, useLocalSearchParams } from "expo-router";
@@ -25,11 +26,17 @@ export default function ProductDetails() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const { id } = useLocalSearchParams();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
 
   useEffect(() => {
     if (typeof id === "string") {
       fetchProductsById(id).then((data) => {
         if (data) {
+          console.log("Fetched product data: ", data);
           setProduct(data as Product);
         }
         setLoading(false);
@@ -46,6 +53,7 @@ export default function ProductDetails() {
   }
 
   if (!product) {
+    console.log("Product not found", product)
     return (
       <SafeAreaView style={styles.loadingContainer}>
         <Text style={styles.noProductText}>No product found</Text>
@@ -68,28 +76,54 @@ export default function ProductDetails() {
       </View>
 
       <ScrollView style={styles.container}>
-        <Image
-          style={styles.image}
-          source={
-            product.imageUrl
-              ? { uri: product.imageUrl }
-              : require("../../assets/images/placeholder.png")
-          }
-        />
+        <TouchableOpacity onPress={toggleModal}>
+          <Image
+            style={styles.image}
+            source={
+              product.imageUrl
+                ? { uri: product.imageUrl }
+                : require("../../assets/images/placeholder.png")
+            }
+          />
+        </TouchableOpacity>
+
         <View style={styles.contentContainer}>
-          <Text style={styles.title}>{product?.title}</Text>
-          <Text style={styles.price}>{product?.price} NOK</Text>
+          <Text style={styles.title}>{product.title}</Text>
+          <Text style={styles.price}>{product.price} NOK</Text>
           <TouchableOpacity
             style={styles.button}
             onPress={() => Alert.alert("Buy button pressed")}
           >
             <Text style={styles.buttonText}>Buy this product</Text>
           </TouchableOpacity>
+
           <Text style={styles.sectionTitle}>Description</Text>
-          <Text style={styles.sectionText}>{product?.description}</Text>
+          <Text style={styles.sectionText}>{product.description}</Text>
+
           <Text style={styles.sectionTitle}>Condition</Text>
-          <Text style={styles.sectionText}>{product?.condition}</Text>
+          <Text style={styles.sectionText}>{product.condition}</Text>
         </View>
+
+        <Modal
+          visible={isModalVisible}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={toggleModal}
+          >
+            <View style={styles.modalContainer}>
+              <TouchableOpacity style={styles.modalCloseButton} onPress={toggleModal}>
+                <Text style={styles.closeButtonText}>X</Text>
+              </TouchableOpacity>
+              <Image
+                style={styles.modalImage}
+                source={
+                  product.imageUrl
+                    ? { uri: product.imageUrl }
+                    : require("../../assets/images/placeholder.png")
+                }
+              />
+            </View>
+          </Modal>
       </ScrollView>
     </SafeAreaView>
   );
@@ -132,10 +166,14 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    flexGrow: 1,
+    borderWidth: 1,
   },
   image: {
     width: "100%",
-    height: "150%",
+    height: 200,
+    resizeMode: 'cover',
+    marginBottom: 10,
     backgroundColor: COLORS.accent,
   },
   contentContainer: {
@@ -178,5 +216,33 @@ const styles = StyleSheet.create({
   noProductText: {
     color: COLORS.textSecondary,
     fontSize: FONT_SIZES.medium,
+  },
+
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+
+  modalImage: {
+    width: '90%',
+    height: '80%',
+    resizeMode: 'contain',
+  },
+
+  modalCloseButton: {
+    position: 'absolute',
+    top:20,
+    right:20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 10,
+  },
+
+  closeButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
   },
 });
