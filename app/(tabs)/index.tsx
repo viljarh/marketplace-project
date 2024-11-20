@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -24,6 +24,7 @@ import ProductCard from "components/ProductCard";
 import { fetchCategoriesFromProducts, fetchProducts } from "firebase/firebase";
 import { Product } from "firebase/firebaseTypes";
 import { router } from "expo-router";
+import { debounce } from "lodash";
 
 export default function Index() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -31,28 +32,39 @@ export default function Index() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const debouncedSearch = useCallback(
+    debounce((query: string) => {
+      const filteredData = products.filter((product) =>
+        product.title.toLowerCase().includes(query.toLowerCase()),
+      );
+      setFilteredProducts(filteredData);
+    }, 300),
+    [products],
+  );
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const data = await fetchProducts();
-      const filteredData = data.filter((product) =>
-        product.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setFilteredProducts(filteredData);
       setProducts(data);
+      setFilteredProducts(data);
       await fetchCategoriesFromProducts();
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
       setLoading(false);
     }
-  }, [searchQuery]);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
       fetchData();
     }, [fetchData]),
   );
+
+  useEffect(() => {
+    debouncedSearch(searchQuery);
+  }, [searchQuery, debouncedSearch]);
 
   if (loading) {
     return (
@@ -70,7 +82,11 @@ export default function Index() {
           <Text style={styles.headerTitle}>
             Market<Text style={styles.headerTitleAccent}>Place</Text>
           </Text>
-          <BellIcon size={24} color={COLORS.textSecondary} />
+          <BellIcon
+            size={24}
+            color={COLORS.textSecondary}
+            onPress={() => router.push("/notifications")}
+          />
         </View>
 
         {/* Search Bar */}
