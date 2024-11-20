@@ -128,7 +128,7 @@ export const handleCreatePost = async (
     price,
     category,
     condition,
-    createdAt: Timestamp.now().toDate(),
+    createdAt: Timestamp.now(),
     imageUrl,
   };
 
@@ -154,6 +154,20 @@ export async function fetchCategories(): Promise<Category[]> {
   return categories;
 }
 
+// export async function fetchProductByCategory(
+//   category: string,
+// ): Promise<Product[]> {
+//   const productRef = collection(db, "products");
+//   const q = query(productRef, where("category", "==", category));
+//   const querySnapshot = await getDocs(q);
+//
+//   const products = querySnapshot.docs.map((doc) => ({
+//     id: doc.id,
+//     ...doc.data(),
+//   })) as Product[];
+//   return products;
+// }
+
 export async function fetchProductByCategory(
   category: string,
 ): Promise<Product[]> {
@@ -161,13 +175,18 @@ export async function fetchProductByCategory(
   const q = query(productRef, where("category", "==", category));
   const querySnapshot = await getDocs(q);
 
-  const products = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Product[];
+  const products = querySnapshot.docs.map((doc) => {
+    const data = doc.data();
+
+    return {
+      id: doc.id,
+      ...data,
+      createdAt: data.createdAt ? (data.createdAt as Timestamp).toDate() : null,
+    };
+  }) as Product[];
+
   return products;
 }
-
 export async function fetchCategoriesFromProducts(): Promise<string[]> {
   const productsCollection = collection(db, "products");
   const querySnapshot = await getDocs(productsCollection);

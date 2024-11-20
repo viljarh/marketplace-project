@@ -3,17 +3,12 @@ import { router, useLocalSearchParams } from "expo-router";
 import {
   ScrollView,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import {
-  ChevronLeftIcon,
-  MagnifyingGlassIcon,
-  FunnelIcon,
-} from "react-native-heroicons/outline";
+import { ChevronLeftIcon, FunnelIcon } from "react-native-heroicons/outline";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, {
   BottomSheetView,
@@ -29,6 +24,7 @@ import {
   SPACING,
   BORDER_RADIUS,
 } from "constants/constants";
+import { Timestamp } from "firebase/firestore";
 
 export default function CategoryFeed() {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -38,6 +34,7 @@ export default function CategoryFeed() {
   const params = useLocalSearchParams();
   const categoryId = params.id as string;
   const categoryName = params.categoryName as string | undefined;
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchCategoryProducts = async () => {
@@ -45,6 +42,7 @@ export default function CategoryFeed() {
       try {
         const data = await fetchProductByCategory(categoryId as string);
         setProducts(data);
+        setFilteredProducts(data);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -62,12 +60,64 @@ export default function CategoryFeed() {
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
-
   const applyFilter = (filterType: string) => {
     setFilter(filterType);
     bottomSheetRef.current?.close();
-    // Apply the filter logic here
-    // For example, you can sort the products array based on the filterType
+
+    const sortedProducts = [...products];
+    switch (filterType) {
+      case "newest":
+        sortedProducts.sort((a, b) => {
+          const dateA =
+            a.createdAt instanceof Timestamp
+              ? a.createdAt.toDate().getTime()
+              : a.createdAt instanceof Date
+                ? a.createdAt.getTime()
+                : 0;
+          const dateB =
+            b.createdAt instanceof Timestamp
+              ? b.createdAt.toDate().getTime()
+              : b.createdAt instanceof Date
+                ? b.createdAt.getTime()
+                : 0;
+          return dateB - dateA;
+        });
+        break;
+      case "oldest":
+        sortedProducts.sort((a, b) => {
+          const dateA =
+            a.createdAt instanceof Timestamp
+              ? a.createdAt.toDate().getTime()
+              : a.createdAt instanceof Date
+                ? a.createdAt.getTime()
+                : 0;
+          const dateB =
+            b.createdAt instanceof Timestamp
+              ? b.createdAt.toDate().getTime()
+              : b.createdAt instanceof Date
+                ? b.createdAt.getTime()
+                : 0;
+          return dateA - dateB;
+        });
+        break;
+      case "mostExpensive":
+        sortedProducts.sort(
+          (a, b) => parseFloat(b.price) - parseFloat(a.price),
+        );
+        break;
+      case "leastExpensive":
+        sortedProducts.sort(
+          (a, b) => parseFloat(a.price) - parseFloat(b.price),
+        );
+        break;
+      case "condition":
+        sortedProducts.sort((a, b) => a.condition.localeCompare(b.condition));
+        break;
+      default:
+        break;
+    }
+
+    setFilteredProducts(sortedProducts);
   };
 
   if (loading) {
@@ -94,9 +144,9 @@ export default function CategoryFeed() {
           </TouchableOpacity>
         </View>
 
-        {products.length > 0 ? (
+        {filteredProducts.length > 0 ? (
           <ScrollView contentContainerStyle={styles.productListContainer}>
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </ScrollView>

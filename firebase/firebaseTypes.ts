@@ -1,8 +1,10 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface Product {
   id: string;
   category: string;
   condition: string;
-  createdAt: Date;
+  createdAt?: Timestamp | Date;
   description: string;
   price: string;
   title: string;
