@@ -37,10 +37,6 @@ const TabLayout = () => {
             borderTopWidth: 1,
             height: 75,
             justifyContent: "center",
-            // shadowColor: "#000",
-            // shadowOffset: { width: 0, height: -2 },
-            // shadowOpacity: 0.1,
-            // shadowRadius: 3,
           },
           tabBarLabelStyle: {
             fontSize: 12,
