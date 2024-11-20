@@ -1,24 +1,23 @@
-import React, { useState, useEffect} from "react";
-import { Text, View, ScrollView, StyleSheet, Image, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  Text,
+  View,
+  ScrollView,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db, auth } from "firebase/firebase";
-import { doc, getDocs, collection, query, where } from "firebase/firestore";
+import { getDocs, collection, query, where } from "firebase/firestore";
 import {
   COLORS,
   SPACING,
   FONT_SIZES,
   BORDER_RADIUS,
 } from "constants/constants";
-
-interface FavoriteProduct {
-  id: string;
-  userId: string;
-  productId: string;
-  title: string;
-  imageUrl: string;
-  price: string;
-}
-
+import { FavoriteProduct } from "firebase/firebaseTypes";
+import { router } from "expo-router";
 
 export default function FavoritesScreen() {
   const [favorites, setFavorites] = useState<FavoriteProduct[]>([]);
@@ -37,24 +36,25 @@ export default function FavoritesScreen() {
 
         const q = query(
           collection(db, "favorites"),
-          where("userId", "==", userId)
+          where("userId", "==", userId),
         );
         const querySnapshot = await getDocs(q);
 
-        const fetchedFavorites: FavoriteProduct[] = querySnapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id, 
-            userId: data.userId,
-            productId: data.productId,
-            title: data.title,
-            imageUrl: data.imageUrl,
-            price: data.price,
-          };
-        });
+        const fetchedFavorites: FavoriteProduct[] = querySnapshot.docs.map(
+          (doc) => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              userId: data.userId,
+              productId: data.productId,
+              title: data.title,
+              imageUrl: data.imageUrl,
+              price: data.price,
+            };
+          },
+        );
 
         setFavorites(fetchedFavorites);
-
       } catch (error) {
         console.error("Error fetching favorites:", error);
       } finally {
@@ -65,12 +65,12 @@ export default function FavoritesScreen() {
     fetchFavorites();
   }, []);
 
-  if(loading){
-    return(
+  if (loading) {
+    return (
       <SafeAreaView style={styles.container}>
         <Text>Loading...</Text>
       </SafeAreaView>
-    )
+    );
   }
   return (
     <SafeAreaView style={styles.container}>
@@ -83,17 +83,28 @@ export default function FavoritesScreen() {
         ) : (
           favorites.map((favorite) => (
             <View key={favorite.id} style={styles.itemWrapper}>
-              <TouchableOpacity onPress={() => {/* Navigate to product details */}}>
+              <TouchableOpacity
+                onPress={() => {
+                  router.push({
+                    pathname: "/product/[id]",
+                    params: { id: favorite.productId },
+                  });
+                }}
+              >
                 <View style={styles.itemBox}>
                   <Image
                     source={{ uri: favorite.imageUrl }}
-                    style={{ width: "100%", height: 120, borderRadius: BORDER_RADIUS.medium }}
+                    style={{
+                      width: "100%",
+                      height: 120,
+                      borderRadius: BORDER_RADIUS.medium,
+                    }}
                   />
                 </View>
                 <View style={styles.favoriteDetails}>
                   <Text style={styles.title}>{favorite.title}</Text>
                   <Text style={styles.price}>{favorite.price}</Text>
-              </View>
+                </View>
               </TouchableOpacity>
             </View>
           ))
@@ -142,7 +153,7 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.small,
   },
 
-  favoriteDetails:{
+  favoriteDetails: {
     marginTop: SPACING.small,
     paddingHorizontal: SPACING.small,
   },
