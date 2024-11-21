@@ -225,6 +225,7 @@ export const fetchPostsByUser = async (userId: string): Promise<Product[]> => {
 
   return posts;
 };
+
 export const fetchFavorites = async (): Promise<Product[]> => {
   const currentUser = auth.currentUser;
 
@@ -242,7 +243,6 @@ export const fetchFavorites = async (): Promise<Product[]> => {
   for (const favoriteDoc of favoritesSnapshot.docs) {
     const favoriteData = favoriteDoc.data() as FavoriteProduct;
 
-    // Fetch full product details using productId
     const productDoc = await getDoc(
       doc(db, "products", favoriteData.productId),
     );
@@ -250,8 +250,8 @@ export const fetchFavorites = async (): Promise<Product[]> => {
     if (productDoc.exists()) {
       const productData = productDoc.data() as Product;
       products.push({
-        ...productData, // Spread all fields from the product document
-        id: productDoc.id, // Ensure the product's ID is included
+        ...productData,
+        id: productDoc.id, 
       });
     }
   }

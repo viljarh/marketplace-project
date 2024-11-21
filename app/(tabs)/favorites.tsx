@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Text,
   View,
@@ -11,25 +11,28 @@ import { fetchFavorites } from "firebase/firebase";
 import { COLORS, SPACING, FONT_SIZES } from "constants/constants";
 import ProductCard from "components/ProductCard";
 import { Product } from "types/types";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function FavoritesScreen() {
   const [favorites, setFavorites] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadFavorites = async () => {
-      try {
-        const fetchedFavorites = await fetchFavorites();
-        setFavorites(fetchedFavorites);
-      } catch (error) {
-        console.error("Error fetching favorites:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadFavorites();
-  }, []);
+  const loadFavorites = async () => {
+    try {
+      const fetchedFavorites = await fetchFavorites();
+      setFavorites(fetchedFavorites);
+    } catch (error) {
+      console.error("Error fetching favorites:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useFocusEffect(
+    useCallback(() => {
+      loadFavorites();
+    }, []),
+  );
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
