@@ -20,7 +20,4 @@ export interface FavoriteProduct {
   id: string;
   userId: string;
   productId: string;
-  title: string;
-  imageUrl: string;
-  price: string;
 }

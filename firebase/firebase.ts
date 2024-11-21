@@ -22,9 +22,9 @@ import {
   where,
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Category, Product } from "./firebaseTypes";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import uuid from "react-native-uuid";
+import { Category, FavoriteProduct, Product } from "types/types";
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY!,
@@ -225,5 +225,37 @@ export const fetchPostsByUser = async (userId: string): Promise<Product[]> => {
 
   return posts;
 };
+export const fetchFavorites = async (): Promise<Product[]> => {
+  const currentUser = auth.currentUser;
 
+  if (!currentUser) throw new Error("No user is signed in.");
+
+  const favoritesQuery = query(
+    collection(db, "favorites"),
+    where("userId", "==", currentUser.uid),
+  );
+
+  const favoritesSnapshot = await getDocs(favoritesQuery);
+
+  const products: Product[] = [];
+
+  for (const favoriteDoc of favoritesSnapshot.docs) {
+    const favoriteData = favoriteDoc.data() as FavoriteProduct;
+
+    // Fetch full product details using productId
+    const productDoc = await getDoc(
+      doc(db, "products", favoriteData.productId),
+    );
+
+    if (productDoc.exists()) {
+      const productData = productDoc.data() as Product;
+      products.push({
+        ...productData, // Spread all fields from the product document
+        id: productDoc.id, // Ensure the product's ID is included
+      });
+    }
+  }
+
+  return products;
+};
 export { db };

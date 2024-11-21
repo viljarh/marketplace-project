@@ -4,56 +4,22 @@ import {
   View,
   ScrollView,
   StyleSheet,
-  Image,
-  TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { db, auth } from "firebase/firebase";
-import { getDocs, collection, query, where } from "firebase/firestore";
-import {
-  COLORS,
-  SPACING,
-  FONT_SIZES,
-  BORDER_RADIUS,
-} from "constants/constants";
-import { FavoriteProduct } from "firebase/firebaseTypes";
-import { router } from "expo-router";
+import { fetchFavorites } from "firebase/firebase";
+import { COLORS, SPACING, FONT_SIZES } from "constants/constants";
+import ProductCard from "components/ProductCard";
+import { Product } from "types/types";
 
 export default function FavoritesScreen() {
-  const [favorites, setFavorites] = useState<FavoriteProduct[]>([]);
+  const [favorites, setFavorites] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchFavorites = async () => {
-      const currentUser = auth.currentUser;
-
-      if (!currentUser) {
-        return;
-      }
-
+    const loadFavorites = async () => {
       try {
-        const userId = currentUser.uid;
-
-        const q = query(
-          collection(db, "favorites"),
-          where("userId", "==", userId),
-        );
-        const querySnapshot = await getDocs(q);
-
-        const fetchedFavorites: FavoriteProduct[] = querySnapshot.docs.map(
-          (doc) => {
-            const data = doc.data();
-            return {
-              id: doc.id,
-              userId: data.userId,
-              productId: data.productId,
-              title: data.title,
-              imageUrl: data.imageUrl,
-              price: data.price,
-            };
-          },
-        );
-
+        const fetchedFavorites = await fetchFavorites();
         setFavorites(fetchedFavorites);
       } catch (error) {
         console.error("Error fetching favorites:", error);
@@ -61,55 +27,34 @@ export default function FavoritesScreen() {
         setLoading(false);
       }
     };
-
-    fetchFavorites();
+    loadFavorites();
   }, []);
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
-        <Text>Loading...</Text>
+      <SafeAreaView style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
       </SafeAreaView>
     );
   }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>My Favorites</Text>
       </View>
-      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        {favorites.length === 0 ? (
-          <Text>No favorites found</Text>
-        ) : (
-          favorites.map((favorite) => (
-            <View key={favorite.id} style={styles.itemWrapper}>
-              <TouchableOpacity
-                onPress={() => {
-                  router.push({
-                    pathname: "/product/[id]",
-                    params: { id: favorite.productId },
-                  });
-                }}
-              >
-                <View style={styles.itemBox}>
-                  <Image
-                    source={{ uri: favorite.imageUrl }}
-                    style={{
-                      width: "100%",
-                      height: 120,
-                      borderRadius: BORDER_RADIUS.medium,
-                    }}
-                  />
-                </View>
-                <View style={styles.favoriteDetails}>
-                  <Text style={styles.title}>{favorite.title}</Text>
-                  <Text style={styles.price}>{favorite.price}</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          ))
-        )}
-      </ScrollView>
+
+      {favorites.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No favorites found</Text>
+        </View>
+      ) : (
+        <ScrollView contentContainerStyle={styles.productListContainer}>
+          {favorites.map((favorite) => (
+            <ProductCard key={favorite.id} product={favorite} />
+          ))}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 }
@@ -118,6 +63,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   header: {
     flexDirection: "row",
@@ -134,45 +84,19 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: COLORS.textPrimary,
   },
-  scrollViewContainer: {
+  productListContainer: {
     paddingHorizontal: SPACING.medium,
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
   },
-  itemWrapper: {
-    width: "48%",
-    padding: SPACING.small,
-    marginBottom: SPACING.small,
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  itemBox: {
-    width: "100%",
-    height: 160,
-    backgroundColor: COLORS.secondary,
-    borderRadius: BORDER_RADIUS.medium,
-    marginBottom: SPACING.small,
-  },
-
-  favoriteDetails: {
-    marginTop: SPACING.small,
-    paddingHorizontal: SPACING.small,
-  },
-
-  image: {
-    width: "100%",
-    height: 100,
-    borderRadius: BORDER_RADIUS.medium,
-    marginBottom: SPACING.small,
-  },
-  title: {
+  emptyText: {
     fontSize: FONT_SIZES.medium,
-    fontWeight: "600",
-    color: COLORS.textPrimary,
-    marginBottom: SPACING.small,
-  },
-  price: {
-    fontSize: FONT_SIZES.small,
-    fontWeight: "400",
     color: COLORS.textSecondary,
   },
 });

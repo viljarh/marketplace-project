@@ -33,7 +33,7 @@ export default function CategoryFeed() {
   const [filter, setFilter] = useState<string | null>(null);
   const params = useLocalSearchParams();
   const categoryId = params.id as string;
-  const categoryName = params.categoryName as string | undefined;
+  // const categoryName = params.categoryName as string | undefined;
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
   useEffect(() => {
