@@ -13,16 +13,16 @@ import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Product } from "firebase/firebaseTypes";
-import { auth, db, fetchProductsById} from "firebase/firebase";
+import { auth, db, fetchProductsById } from "firebase/firebase";
 import {
   COLORS,
   FONT_SIZES,
   SPACING,
   BORDER_RADIUS,
 } from "constants/constants";
-import { deleteDoc, doc, setDoc , getDoc} from "firebase/firestore";
+import { deleteDoc, doc, setDoc, getDoc } from "firebase/firestore";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { Product } from "types/types";
 
 export default function ProductDetails() {
   const [product, setProduct] = useState<Product | null>(null);
@@ -39,24 +39,23 @@ export default function ProductDetails() {
     try {
       const currentUser = auth.currentUser;
 
-      if(!currentUser){
-        Alert.alert('Error! ', 'You must be logged in to favorte a product.');
+      if (!currentUser) {
+        Alert.alert("Error! ", "You must be logged in to favorte a product.");
         return;
       }
 
-      if(product?.id){
+      if (product?.id) {
         const userId = currentUser.uid;
         const favoriteId = `${userId}_${product.id}`;
-        const favoritesRef = doc(db, 'favorites', favoriteId);
+        const favoritesRef = doc(db, "favorites", favoriteId);
 
         const favoriteDoc = await getDoc(favoritesRef);
 
-        if(favoriteDoc.exists()){
+        if (favoriteDoc.exists()) {
           await deleteDoc(favoritesRef);
           console.log("Removed from favorites!");
           setIsFavorited(false);
         } else {
-          
           setDoc(favoritesRef, {
             favoriteId: favoriteId,
             userId,
@@ -69,9 +68,9 @@ export default function ProductDetails() {
           setIsFavorited(true);
         }
       } else {
-        console.error("Product Id is missing")
+        console.error("Product Id is missing");
       }
-    } catch(error){
+    } catch (error) {
       console.log("Error updating favorites: ", error);
       Alert.alert("Failed to update favorites. Please try again");
     }
@@ -98,7 +97,7 @@ export default function ProductDetails() {
   }
 
   if (!product) {
-    console.log("Product not found", product)
+    console.log("Product not found", product);
     return (
       <SafeAreaView style={styles.loadingContainer}>
         <Text style={styles.noProductText}>No product found</Text>
@@ -132,14 +131,16 @@ export default function ProductDetails() {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.favoriteButton} onPress={toggleFavorite}>
+        <TouchableOpacity
+          style={styles.favoriteButton}
+          onPress={toggleFavorite}
+        >
           <MaterialIcons
-          name="favorite"
-          size={30}
-          color={isFavorited ? 'red' : 'gray'}
-        />
+            name="favorite"
+            size={30}
+            color={isFavorited ? "red" : "gray"}
+          />
         </TouchableOpacity>
-        
 
         <View style={styles.contentContainer}>
           <Text style={styles.title}>{product.title}</Text>
@@ -163,21 +164,24 @@ export default function ProductDetails() {
           animationType="fade"
           transparent={true}
           onRequestClose={toggleModal}
-          >
-            <View style={styles.modalContainer}>
-              <TouchableOpacity style={styles.modalCloseButton} onPress={toggleModal}>
-                <Text style={styles.closeButtonText}>X</Text>
-              </TouchableOpacity>
-              <Image
-                style={styles.modalImage}
-                source={
-                  product.imageUrl
-                    ? { uri: product.imageUrl }
-                    : require("../../assets/images/placeholder.png")
-                }
-              />
-            </View>
-          </Modal>
+        >
+          <View style={styles.modalContainer}>
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={toggleModal}
+            >
+              <Text style={styles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+            <Image
+              style={styles.modalImage}
+              source={
+                product.imageUrl
+                  ? { uri: product.imageUrl }
+                  : require("../../assets/images/placeholder.png")
+              }
+            />
+          </View>
+        </Modal>
       </ScrollView>
     </SafeAreaView>
   );
@@ -226,7 +230,7 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: 200,
-    resizeMode: 'cover',
+    resizeMode: "cover",
     marginBottom: 10,
     backgroundColor: COLORS.accent,
   },
@@ -274,37 +278,37 @@ const styles = StyleSheet.create({
 
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
   },
 
   modalImage: {
-    width: '90%',
-    height: '80%',
-    resizeMode: 'contain',
+    width: "90%",
+    height: "80%",
+    resizeMode: "contain",
   },
 
   modalCloseButton: {
-    position: 'absolute',
-    top:20,
-    right:20,
-    backgroundColor: 'white',
+    position: "absolute",
+    top: 20,
+    right: 20,
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 10,
   },
 
   closeButtonText: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: 'black',
+    fontWeight: "bold",
+    color: "black",
   },
 
   favoriteButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 20,
     right: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 50,
     padding: 5,
     zIndex: 10,

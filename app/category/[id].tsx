@@ -15,7 +15,6 @@ import BottomSheet, {
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Product } from "../../firebase/firebaseTypes";
 import { fetchProductByCategory } from "firebase/firebase";
 import ProductCard from "components/ProductCard";
 import {
@@ -25,6 +24,7 @@ import {
   BORDER_RADIUS,
 } from "constants/constants";
 import { Timestamp } from "firebase/firestore";
+import { Product } from "types/types";
 
 export default function CategoryFeed() {
   const bottomSheetRef = useRef<BottomSheet>(null);

@@ -11,10 +11,10 @@ import { useSession } from "app/ctx";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, FONT_SIZES, SPACING } from "constants/constants";
 import ProductCard from "components/ProductCard";
-import { Product } from "firebase/firebaseTypes";
 import { fetchPostsByUser } from "firebase/firebase";
 import { router } from "expo-router";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
+import { Product } from "types/types";
 
 export default function MyPostsScreen() {
   const { session } = useSession();

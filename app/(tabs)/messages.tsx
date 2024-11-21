@@ -2,12 +2,7 @@ import React from "react";
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import { ChevronRightIcon } from "react-native-heroicons/outline";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  COLORS,
-  SPACING,
-  FONT_SIZES,
-  BORDER_RADIUS,
-} from "constants/constants";
+import { COLORS, SPACING, FONT_SIZES } from "constants/constants";
 
 export default function MessagesScreen() {
   return (

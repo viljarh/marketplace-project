@@ -22,9 +22,9 @@ import {
 } from "constants/constants";
 import ProductCard from "components/ProductCard";
 import { fetchCategoriesFromProducts, fetchProducts } from "firebase/firebase";
-import { Product } from "firebase/firebaseTypes";
 import { router } from "expo-router";
 import { debounce } from "lodash";
+import { Product } from "types/types";
 
 export default function Index() {
   const [products, setProducts] = useState<Product[]>([]);
