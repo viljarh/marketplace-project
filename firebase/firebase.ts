@@ -118,6 +118,21 @@ export async function fetchProductsById(productId: string) {
   }
 }
 
+export async function fetchUserById(userId: string): Promise<{ email: string } | null> {
+  const userRef = doc(db, "users", userId);
+  const userSnap = await getDoc(userRef);
+
+  if (userSnap.exists()) {
+    const data = userSnap.data();
+    return {
+      email: data.email,
+    };
+  } else {
+    console.log("No such user");
+    return null;
+  }
+}
+
 export const handleCreatePost = async (
   title: string,
   description: string,
