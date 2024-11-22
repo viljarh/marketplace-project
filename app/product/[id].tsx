@@ -17,6 +17,7 @@ import {
   checkIfFavorited,
   fetchProductsById,
   toggleFavoriteProduct,
+  fetchUserById,
 } from "firebase/firebase";
 import {
   COLORS,
@@ -33,6 +34,7 @@ export default function ProductDetails() {
   const { id } = useLocalSearchParams();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
+  const [user, setUser] = useState<{ email: string } | null>(null);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -54,13 +56,22 @@ export default function ProductDetails() {
     if (typeof id === "string") {
       fetchProductsById(id).then(async (data) => {
         if (data) {
-          setProduct(data as Product);
+          const productData = data as Product;
+          setProduct(productData);
 
           try {
             const isFavorite = await checkIfFavorited(id);
             setIsFavorited(isFavorite);
           } catch (error) {
             console.log("Error checking favorite status: ", error);
+          }
+
+          // Fetch user data
+          try {
+            const userData = await fetchUserById(productData.userId);
+            setUser(userData);
+          } catch (error) {
+            console.log("Error fetching user data:", error);
           }
         }
         setLoading(false);
@@ -132,11 +143,21 @@ export default function ProductDetails() {
             <Text style={styles.buttonText}>Buy this product</Text>
           </TouchableOpacity>
 
+          
           <Text style={styles.sectionTitle}>Description</Text>
           <Text style={styles.sectionText}>{product.description}</Text>
 
+          
+
           <Text style={styles.sectionTitle}>Condition</Text>
           <Text style={styles.sectionText}>{product.condition}</Text>
+
+
+          <Text style={styles.sectionTitle}>Published by</Text>
+          {user && (
+            <Text style={styles.sectionText}>{user.email}</Text>
+          )}
+
         </View>
 
         <Modal
@@ -176,6 +197,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  publisher: {
+    fontSize: FONT_SIZES.medium,
+    color: COLORS.textSecondary,
+    marginTop: SPACING.small,
   },
   header: {
     flexDirection: "row",
