@@ -2,6 +2,7 @@ import { Timestamp } from "firebase/firestore";
 
 export interface Product {
   id: string;
+  userId: string;
   category: string;
   condition: string;
   createdAt?: Timestamp | Date;

@@ -5,6 +5,7 @@ import {
   signOut as firebaseSignOut,
   User,
   Auth,
+  getAuth,
   onAuthStateChanged,
   initializeAuth,
   getReactNativePersistence,
@@ -122,7 +123,14 @@ export const handleCreatePost = async (
   condition: string,
   imageUrl: string | null,
 ): Promise<string | null> => {
+  const currentUser = auth.currentUser;
+
+  if (!currentUser) {
+    throw new Error("User is not authenticated");
+  }
+
   const productData: Omit<Product, "id"> = {
+    userId: currentUser.uid, // Include the userId
     title,
     description,
     price,
