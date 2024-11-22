@@ -68,7 +68,7 @@ export default function ProductDetails() {
           setIsFavorited(true);
         }
       } else {
-        console.error("Product Id is missing");
+        console.error("Product ID is missing");
       }
     } catch (error) {
       console.log("Error updating favorites: ", error);
@@ -229,8 +229,8 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 200,
-    resizeMode: "cover",
+    aspectRatio: 1,
+    resizeMode: "contain",
     marginBottom: 10,
     backgroundColor: COLORS.accent,
   },
