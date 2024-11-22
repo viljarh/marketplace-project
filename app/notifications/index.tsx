@@ -14,17 +14,49 @@ import {
   FONT_SIZES,
   SPACING,
 } from "constants/constants";
+import { useEffect, useState } from "react";
+import { db } from "../../firebase/firebase";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 
 export default function NotificationsPage() {
-  const notifications = [
-    { id: 1, message: "New iPhone 16 Added", time: "2 min ago" },
-    { id: 2, message: "Table", time: "5 min ago" },
-    { id: 3, message: "Washing machine", time: "2 hours ago" },
-    { id: 4, message: "Sofa", time: "Yesterday" },
-    { id: 5, message: "Clothes", time: "4 weeks ago" },
-    { id: 6, message: "Old mobile", time: "Last year" },
-    { id: 7, message: "Computer added", time: "Two years ago" },
-  ];
+  const [notifications, setNotifications] = useState<
+    { id: string; message: string; time: string }[]
+  >([]);
+
+  useEffect(() => {
+    const q = query(
+      collection(db, "products"),
+      orderBy("createdAt", "desc")
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const updatedNotifications = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          message: `${data.title || "New Product"}`,
+          time: getTimeAgo(data.createdAt?.toDate() || new Date()),
+        };
+      });
+
+      setNotifications(updatedNotifications);
+    });
+
+    return () => unsubscribe(); 
+  }, []);
+
+  const getTimeAgo = (timestamp: Date) => {
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - timestamp.getTime()) / 1000);
+
+    if (diffInSeconds < 60) return `${diffInSeconds} sec ago`;
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 604800)} weeks ago`;
+    return `${Math.floor(diffInSeconds / 2592000)} months ago`;
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.header}>
@@ -35,7 +67,7 @@ export default function NotificationsPage() {
           <ChevronLeftIcon size={20} color={COLORS.textSecondary} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Notifications</Text>
+        <Text style={styles.headerTitle}>Newly Added</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -45,7 +77,9 @@ export default function NotificationsPage() {
             <Text style={styles.notificationMessage}>
               {notification.message}
             </Text>
-            <Text style={styles.notificationTime}>{notification.time}</Text>
+            <Text style={styles.notificationTime}>
+              {notification.time}
+            </Text>
           </View>
         ))}
       </ScrollView>
