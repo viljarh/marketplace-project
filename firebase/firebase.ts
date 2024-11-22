@@ -8,6 +8,9 @@ import {
   onAuthStateChanged,
   initializeAuth,
   getReactNativePersistence,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
 } from "firebase/auth";
 import {
   Timestamp,
@@ -308,5 +311,29 @@ export const checkIfFavorited = async (productId: string): Promise<boolean> => {
 
   const favoriteDoc = await getDoc(favoritesRef);
   return favoriteDoc.exists();
+};
+
+export const reauthenticateUser = async (currentPassword: string) => {
+  const currentUser = auth.currentUser;
+
+  if (!currentUser || !currentPassword) {
+    throw new Error("Please provide current passowrd for authentication");
+  }
+
+  const credential = EmailAuthProvider.credential(
+    currentUser.email!,
+    currentPassword,
+  );
+  await reauthenticateWithCredential(currentUser, credential);
+};
+
+export const updateUserPassword = async (newPassword: string) => {
+  const currentUser = auth.currentUser;
+
+  if (!currentUser) {
+    throw new Error("No authenticated user found");
+  }
+
+  await updatePassword(currentUser, newPassword);
 };
 export { db };

@@ -51,11 +51,6 @@ export default function ProfileScreen() {
             <DocumentIcon size={24} color={COLORS.textSecondary} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuText}>My Favorites</Text>
-            <HeartIcon size={24} color={COLORS.textSecondary} />
-          </TouchableOpacity>
-
           <TouchableOpacity
             onPress={() => router.push("/settings")}
             style={styles.menuItem}
