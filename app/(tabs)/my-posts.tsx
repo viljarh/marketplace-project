@@ -18,10 +18,7 @@ import {
 } from "constants/constants";
 import { deletePostById, fetchPostsByUser } from "firebase/firebase";
 import { router } from "expo-router";
-import {
-  PencilIcon,
-  TrashIcon,
-} from "react-native-heroicons/outline";
+import { PencilIcon, TrashIcon } from "react-native-heroicons/outline";
 import { Product } from "types/types";
 import ProductCard from "components/ProductCard";
 
@@ -69,7 +66,7 @@ export default function MyPostsScreen() {
               setLoading(true);
               await deletePostById(postId);
               setPosts((prevPosts) =>
-                prevPosts.filter((post) => post.id !== postId),
+                prevPosts.filter((post) => post.id !== postId)
               );
               Alert.alert("Success", "Post deleted successfully.");
             } catch (error) {
@@ -80,7 +77,7 @@ export default function MyPostsScreen() {
             }
           },
         },
-      ],
+      ]
     );
   };
 
@@ -158,20 +155,20 @@ const styles = StyleSheet.create({
   scrollContainer: {
     padding: SPACING.medium,
   },
-  postsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
+
+  postsContainer: {},
+
   postWrapper: {
-    width: "48%",
-    marginBottom: SPACING.medium,
+    flexDirection: "column",
+    alignItems: "center",
   },
+
   iconsContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: SPACING.small,
+    gap: SPACING.small,
+    marginBottom: SPACING.small,
   },
+
   icon: {
     padding: SPACING.small,
     backgroundColor: COLORS.secondary,
