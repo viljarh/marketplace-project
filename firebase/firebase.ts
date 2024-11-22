@@ -5,7 +5,6 @@ import {
   signOut as firebaseSignOut,
   User,
   Auth,
-  getAuth,
   onAuthStateChanged,
   initializeAuth,
   getReactNativePersistence,
@@ -14,6 +13,7 @@ import {
   Timestamp,
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -259,11 +259,54 @@ export const fetchFavorites = async (): Promise<Product[]> => {
       const productData = productDoc.data() as Product;
       products.push({
         ...productData,
-        id: productDoc.id, 
+        id: productDoc.id,
       });
     }
   }
 
   return products;
+};
+
+export const toggleFavoriteProduct = async (productId: string) => {
+  const currentUser = auth.currentUser;
+
+  if (!currentUser) {
+    throw new Error("You must be logged in to favorite a product");
+  }
+
+  const userId = currentUser.uid;
+  const favoriteId = `${userId}_${productId}`;
+  const favoritesRef = doc(db, "favorites", favoriteId);
+
+  const favoriteDoc = await getDoc(favoritesRef);
+
+  if (favoriteDoc.exists()) {
+    await deleteDoc(favoritesRef);
+    console.log("Removed from favorites!");
+    return false;
+  } else {
+    await setDoc(favoritesRef, {
+      favoriteId: favoriteId,
+      userId,
+      productId,
+    });
+    console.log("Added to favorites");
+    return true;
+  }
+};
+
+export const checkIfFavorited = async (productId: string): Promise<boolean> => {
+  const currentUser = auth.currentUser;
+
+  if (!currentUser) {
+    throw new Error("You must be logged in to check favorite status");
+  }
+
+  const userId = currentUser.uid;
+  const favoriteId = `${userId}_${productId}`;
+  const favoritesRef = doc(db, "favorites", favoriteId);
+
+  const favoriteDoc = await getDoc(favoritesRef);
+  return favoriteDoc.exists();
 };
 export { db };

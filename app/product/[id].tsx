@@ -13,7 +13,13 @@ import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth, db, fetchProductsById } from "firebase/firebase";
+import {
+  auth,
+  checkIfFavorited,
+  db,
+  fetchProductsById,
+  toggleFavoriteProduct,
+} from "firebase/firebase";
 import {
   COLORS,
   FONT_SIZES,
@@ -35,53 +41,71 @@ export default function ProductDetails() {
     setIsModalVisible(!isModalVisible);
   };
 
-  const toggleFavorite = async () => {
+  // const toggleFavorite = async () => {
+  //   try {
+  //     const currentUser = auth.currentUser;
+  //
+  //     if (!currentUser) {
+  //       Alert.alert("Error! ", "You must be logged in to favorte a product.");
+  //       return;
+  //     }
+  //
+  //     if (product?.id) {
+  //       const userId = currentUser.uid;
+  //       const favoriteId = `${userId}_${product.id}`;
+  //       const favoritesRef = doc(db, "favorites", favoriteId);
+  //
+  //       const favoriteDoc = await getDoc(favoritesRef);
+  //
+  //       if (favoriteDoc.exists()) {
+  //         await deleteDoc(favoritesRef);
+  //         console.log("Removed from favorites!");
+  //         setIsFavorited(false);
+  //       } else {
+  //         setDoc(favoritesRef, {
+  //           favoriteId: favoriteId,
+  //           userId,
+  //           productId: product?.id,
+  //           title: product?.title,
+  //           imageUrl: product?.imageUrl,
+  //           price: product?.price,
+  //         });
+  //         console.log("Added to favorites!");
+  //         setIsFavorited(true);
+  //       }
+  //     } else {
+  //       console.error("Product ID is missing");
+  //     }
+  //   } catch (error) {
+  //     console.log("Error updating favorites: ", error);
+  //     Alert.alert("Failed to update favorites. Please try again");
+  //   }
+  // };
+
+  const handleFavoriteToggle = async () => {
     try {
-      const currentUser = auth.currentUser;
-
-      if (!currentUser) {
-        Alert.alert("Error! ", "You must be logged in to favorte a product.");
-        return;
-      }
-
       if (product?.id) {
-        const userId = currentUser.uid;
-        const favoriteId = `${userId}_${product.id}`;
-        const favoritesRef = doc(db, "favorites", favoriteId);
-
-        const favoriteDoc = await getDoc(favoritesRef);
-
-        if (favoriteDoc.exists()) {
-          await deleteDoc(favoritesRef);
-          console.log("Removed from favorites!");
-          setIsFavorited(false);
-        } else {
-          setDoc(favoritesRef, {
-            favoriteId: favoriteId,
-            userId,
-            productId: product?.id,
-            title: product?.title,
-            imageUrl: product?.imageUrl,
-            price: product?.price,
-          });
-          console.log("Added to favorites!");
-          setIsFavorited(true);
-        }
-      } else {
-        console.error("Product ID is missing");
+        const updatedFavoriteStatus = await toggleFavoriteProduct(product.id);
+        setIsFavorited(updatedFavoriteStatus);
       }
     } catch (error) {
-      console.log("Error updating favorites: ", error);
-      Alert.alert("Failed to update favorites. Please try again");
+      console.log("Error updating favorites", error);
+      Alert.alert("Failed to update favorites. Please try again.");
     }
   };
 
   useEffect(() => {
     if (typeof id === "string") {
-      fetchProductsById(id).then((data) => {
+      fetchProductsById(id).then(async (data) => {
         if (data) {
-          console.log("Fetched product data: ", data);
           setProduct(data as Product);
+
+          try {
+            const isFavorite = await checkIfFavorited(id);
+            setIsFavorited(isFavorite);
+          } catch (error) {
+            console.log("Error checking favorite status: ", error);
+          }
         }
         setLoading(false);
       });
@@ -133,7 +157,7 @@ export default function ProductDetails() {
 
         <TouchableOpacity
           style={styles.favoriteButton}
-          onPress={toggleFavorite}
+          onPress={handleFavoriteToggle}
         >
           <MaterialIcons
             name="favorite"
