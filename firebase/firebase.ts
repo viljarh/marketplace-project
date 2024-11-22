@@ -317,13 +317,18 @@ export const reauthenticateUser = async (currentPassword: string) => {
   const currentUser = auth.currentUser;
 
   if (!currentUser || !currentPassword) {
-    throw new Error("Please provide current passowrd for authentication");
+    throw new Error("Please provide current password for authentication");
   }
 
   const credential = EmailAuthProvider.credential(
     currentUser.email!,
     currentPassword,
   );
+
+  if (!currentUser.email) {
+    throw new Error("Current users email is not available");
+  }
+
   await reauthenticateWithCredential(currentUser, credential);
 };
 

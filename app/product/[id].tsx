@@ -14,9 +14,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
-  auth,
   checkIfFavorited,
-  db,
   fetchProductsById,
   toggleFavoriteProduct,
 } from "firebase/firebase";
@@ -26,7 +24,6 @@ import {
   SPACING,
   BORDER_RADIUS,
 } from "constants/constants";
-import { deleteDoc, doc, setDoc, getDoc } from "firebase/firestore";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { Product } from "types/types";
 
@@ -40,47 +37,6 @@ export default function ProductDetails() {
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
-
-  // const toggleFavorite = async () => {
-  //   try {
-  //     const currentUser = auth.currentUser;
-  //
-  //     if (!currentUser) {
-  //       Alert.alert("Error! ", "You must be logged in to favorte a product.");
-  //       return;
-  //     }
-  //
-  //     if (product?.id) {
-  //       const userId = currentUser.uid;
-  //       const favoriteId = `${userId}_${product.id}`;
-  //       const favoritesRef = doc(db, "favorites", favoriteId);
-  //
-  //       const favoriteDoc = await getDoc(favoritesRef);
-  //
-  //       if (favoriteDoc.exists()) {
-  //         await deleteDoc(favoritesRef);
-  //         console.log("Removed from favorites!");
-  //         setIsFavorited(false);
-  //       } else {
-  //         setDoc(favoritesRef, {
-  //           favoriteId: favoriteId,
-  //           userId,
-  //           productId: product?.id,
-  //           title: product?.title,
-  //           imageUrl: product?.imageUrl,
-  //           price: product?.price,
-  //         });
-  //         console.log("Added to favorites!");
-  //         setIsFavorited(true);
-  //       }
-  //     } else {
-  //       console.error("Product ID is missing");
-  //     }
-  //   } catch (error) {
-  //     console.log("Error updating favorites: ", error);
-  //     Alert.alert("Failed to update favorites. Please try again");
-  //   }
-  // };
 
   const handleFavoriteToggle = async () => {
     try {
