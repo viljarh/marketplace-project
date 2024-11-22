@@ -117,15 +117,7 @@ export default function CreatePostScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <ChevronLeftIcon size={20} color={COLORS.textSecondary} />
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
         <Text style={styles.headerTitle}>Create Post</Text>
-        <View style={styles.headerSpacer} />
       </View>
 
       <View style={styles.contentContainer}>
@@ -234,7 +226,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: SPACING.medium,
     paddingVertical: SPACING.small,

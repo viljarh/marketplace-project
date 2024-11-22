@@ -66,7 +66,6 @@ export default function ProductDetails() {
             console.log("Error checking favorite status: ", error);
           }
 
-          // Fetch user data
           try {
             const userData = await fetchUserById(productData.userId);
             setUser(userData);
@@ -110,7 +109,10 @@ export default function ProductDetails() {
         <View style={styles.headerSpacer} />
       </View>
 
-      <ScrollView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollContentContainer}
+      >
         <TouchableOpacity onPress={toggleModal}>
           <Image
             style={styles.image}
@@ -143,47 +145,40 @@ export default function ProductDetails() {
             <Text style={styles.buttonText}>Buy this product</Text>
           </TouchableOpacity>
 
-          
           <Text style={styles.sectionTitle}>Description</Text>
           <Text style={styles.sectionText}>{product.description}</Text>
-
-          
 
           <Text style={styles.sectionTitle}>Condition</Text>
           <Text style={styles.sectionText}>{product.condition}</Text>
 
-
           <Text style={styles.sectionTitle}>Published by</Text>
-          {user && (
-            <Text style={styles.sectionText}>{user.email}</Text>
-          )}
-
+          {user && <Text style={styles.sectionText}>{user.email}</Text>}
         </View>
-
-        <Modal
-          visible={isModalVisible}
-          animationType="fade"
-          transparent={true}
-          onRequestClose={toggleModal}
-        >
-          <View style={styles.modalContainer}>
-            <TouchableOpacity
-              style={styles.modalCloseButton}
-              onPress={toggleModal}
-            >
-              <Text style={styles.closeButtonText}>X</Text>
-            </TouchableOpacity>
-            <Image
-              style={styles.modalImage}
-              source={
-                product.imageUrl
-                  ? { uri: product.imageUrl }
-                  : require("../../assets/images/placeholder.png")
-              }
-            />
-          </View>
-        </Modal>
       </ScrollView>
+
+      <Modal
+        visible={isModalVisible}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={toggleModal}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            style={styles.modalCloseButton}
+            onPress={toggleModal}
+          >
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+          <Image
+            style={styles.modalImage}
+            source={
+              product.imageUrl
+                ? { uri: product.imageUrl }
+                : require("../../assets/images/placeholder.png")
+            }
+          />
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -211,6 +206,7 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.small,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.accent,
+    marginBottom: SPACING.medium,
   },
   backButton: {
     flexDirection: "row",
@@ -231,7 +227,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexGrow: 1,
-    borderWidth: 1,
+    backgroundColor: COLORS.white,
   },
   image: {
     width: "100%",
@@ -318,5 +314,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     padding: 5,
     zIndex: 10,
+  },
+  scrollContentContainer: {
+    paddingBottom: 80,
   },
 });

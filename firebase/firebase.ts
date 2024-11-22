@@ -30,7 +30,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import uuid from "react-native-uuid";
 import { Category, FavoriteProduct, Product } from "types/types";
-import { has } from "lodash";
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY!,
