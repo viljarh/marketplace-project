@@ -6,15 +6,25 @@ import {
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useSession } from "app/ctx";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, FONT_SIZES, SPACING } from "constants/constants";
-import ProductCard from "components/ProductCard";
-import { fetchPostsByUser } from "firebase/firebase";
+import {
+  COLORS,
+  FONT_SIZES,
+  SPACING,
+  BORDER_RADIUS,
+} from "constants/constants";
+import { deletePostById, fetchPostsByUser } from "firebase/firebase";
 import { router } from "expo-router";
-import { ChevronLeftIcon } from "react-native-heroicons/outline";
+import {
+  ChevronLeftIcon,
+  PencilIcon,
+  TrashIcon,
+} from "react-native-heroicons/outline";
 import { Product } from "types/types";
+import ProductCard from "components/ProductCard";
 
 export default function MyPostsScreen() {
   const { session } = useSession();
@@ -39,6 +49,42 @@ export default function MyPostsScreen() {
     loadUserPosts();
   }, [session]);
 
+  const handleEditPost = (postId: string) => {
+    router.push({ pathname: "/edit-post/[id]", params: { id: postId } });
+  };
+
+  const handleDeletePost = async (postId: string) => {
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this post?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setLoading(true);
+              await deletePostById(postId);
+              setPosts((prevPosts) =>
+                prevPosts.filter((post) => post.id !== postId),
+              );
+              Alert.alert("Success", "Post deleted successfully.");
+            } catch (error) {
+              Alert.alert("Error", "Failed to delete post. Please try again.");
+              console.error("Error deleting post:", error);
+            } finally {
+              setLoading(false);
+            }
+          },
+        },
+      ],
+    );
+  };
+
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
@@ -57,13 +103,33 @@ export default function MyPostsScreen() {
           <ChevronLeftIcon size={20} color={COLORS.textSecondary} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Settings</Text>
+        <Text style={styles.headerTitle}>My Posts</Text>
         <View style={styles.headerSpacer} />
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {posts.length > 0 ? (
-          posts.map((post) => <ProductCard key={post.id} product={post} />)
+          posts.map((post) => (
+            <View key={post.id} style={styles.postContainer}>
+              <View style={styles.cardWrapper}>
+                {/* Product Card */}
+                <ProductCard product={post} />
+                {/* Edit and Delete Buttons Overlaid */}
+                <View style={styles.actionsOverlay}>
+                  <TouchableOpacity onPress={() => handleEditPost(post.id)}>
+                    <View style={styles.actionIcon}>
+                      <PencilIcon size={18} color={COLORS.white} />
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleDeletePost(post.id)}>
+                    <View style={styles.actionIcon}>
+                      <TrashIcon size={18} color={COLORS.white} />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          ))
         ) : (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>
@@ -86,14 +152,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  backButton: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  backText: {
-    color: COLORS.textSecondary,
-    marginLeft: SPACING.small,
-  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -102,12 +160,14 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.small,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.accent,
-    marginBottom: SPACING.medium,
   },
-  headerText: {
-    fontSize: FONT_SIZES.large,
-    fontWeight: "600",
-    color: COLORS.textPrimary,
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  backText: {
+    color: COLORS.textSecondary,
+    marginLeft: SPACING.small,
   },
   headerTitle: {
     fontSize: FONT_SIZES.large,
@@ -119,6 +179,29 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     paddingHorizontal: SPACING.medium,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+  postContainer: {
+    width: "48%",
+    marginBottom: SPACING.large,
+  },
+  cardWrapper: {
+    position: "relative",
+  },
+  actionsOverlay: {
+    position: "absolute",
+    top: SPACING.small,
+    right: SPACING.small,
+    flexDirection: "row",
+    gap: SPACING.small,
+  },
+  actionIcon: {
+    backgroundColor: COLORS.primary,
+    padding: SPACING.small / 2,
+    borderRadius: BORDER_RADIUS.small,
+    opacity: 0.8,
   },
   emptyContainer: {
     flex: 1,

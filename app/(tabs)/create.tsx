@@ -94,15 +94,24 @@ export default function CreatePostScreen() {
       price,
       category,
       condition,
-      imageUrls[0]
+      imageUrls[0],
     );
 
     if (newProductId) {
       console.log("Product created with ID:", newProductId);
+      setTitle("");
+      setDescription("");
+      setPrice("");
+      setCategory("");
+      setCondition("");
+      setImage([]);
+
+      Alert.alert("Success", "Product created successfully!");
       router.replace("/");
     } else {
       console.error("Failed to create product");
       setErrorMessage("Failed to create product. Please try again.");
+      Alert.alert("Error", "Failed to create product. Please try again.");
     }
   };
 
@@ -130,7 +139,7 @@ export default function CreatePostScreen() {
           onChangeText={(text) => {
             setTitle(text);
             if (errorMessage) {
-              setErrorMessage('');
+              setErrorMessage("");
             }
           }}
         />
@@ -143,7 +152,7 @@ export default function CreatePostScreen() {
           onChangeText={(text) => {
             setDescription(text);
             if (errorMessage) {
-              setErrorMessage('');
+              setErrorMessage("");
             }
           }}
           multiline
@@ -158,7 +167,7 @@ export default function CreatePostScreen() {
           onChangeText={(text) => {
             setPrice(text);
             if (errorMessage) {
-              setErrorMessage('');
+              setErrorMessage("");
             }
           }}
         />

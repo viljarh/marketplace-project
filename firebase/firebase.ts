@@ -341,4 +341,15 @@ export const updateUserPassword = async (newPassword: string) => {
 
   await updatePassword(currentUser, newPassword);
 };
+
+export const deletePostById = async (postId: string) => {
+  try {
+    const postRef = doc(db, "products", postId);
+    await deleteDoc(postRef);
+    console.log(`Post with ID ${postId} has been deleted successfully`);
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    throw error;
+  }
+};
 export { db };
