@@ -39,7 +39,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    flex: 1,
+    width: "48%",
     margin: SPACING.small,
     marginHorizontal: "1%",
   },
