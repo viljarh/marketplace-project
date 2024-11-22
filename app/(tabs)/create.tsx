@@ -35,6 +35,7 @@ export default function CreatePostScreen() {
   const [condition, setCondition] = useState("");
   const [openCondition, setOpenCondition] = useState(false);
   const [image, setImage] = useState<string[]>([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const router = useRouter();
 
@@ -74,6 +75,13 @@ export default function CreatePostScreen() {
   };
 
   const createProduct = async () => {
+    setErrorMessage("");
+
+    if (!title || !description || !price || !category || !condition) {
+      setErrorMessage("Please fill in all fields.");
+      return;
+    }
+
     let imageUrls: string[] = [];
     for (const img of image) {
       const url = await uploadImageToFirebase(img);
@@ -86,7 +94,7 @@ export default function CreatePostScreen() {
       price,
       category,
       condition,
-      imageUrls[0],
+      imageUrls[0]
     );
 
     if (newProductId) {
@@ -94,6 +102,7 @@ export default function CreatePostScreen() {
       router.replace("/");
     } else {
       console.error("Failed to create product");
+      setErrorMessage("Failed to create product. Please try again.");
     }
   };
 
@@ -118,7 +127,12 @@ export default function CreatePostScreen() {
           placeholder="Enter title"
           value={title}
           autoCapitalize={"none"}
-          onChangeText={setTitle}
+          onChangeText={(text) => {
+            setTitle(text);
+            if (errorMessage) {
+              setErrorMessage('');
+            }
+          }}
         />
 
         <Text style={styles.label}>Description</Text>
@@ -126,7 +140,12 @@ export default function CreatePostScreen() {
           style={styles.input}
           placeholder="Enter description"
           value={description}
-          onChangeText={setDescription}
+          onChangeText={(text) => {
+            setDescription(text);
+            if (errorMessage) {
+              setErrorMessage('');
+            }
+          }}
           multiline
         />
 
@@ -136,7 +155,12 @@ export default function CreatePostScreen() {
           placeholder="Enter price"
           keyboardType="numeric"
           value={price}
-          onChangeText={setPrice}
+          onChangeText={(text) => {
+            setPrice(text);
+            if (errorMessage) {
+              setErrorMessage('');
+            }
+          }}
         />
 
         <Text style={styles.label}>Select Category</Text>
@@ -183,6 +207,10 @@ export default function CreatePostScreen() {
             </View>
           ))}
         </ScrollView>
+
+        {errorMessage ? (
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        ) : null}
 
         <TouchableOpacity style={styles.createButton} onPress={createProduct}>
           <Text style={styles.createButtonText}>Create Post</Text>
@@ -295,5 +323,10 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: FONT_SIZES.medium,
     fontWeight: "600",
+  },
+  errorMessage: {
+    color: "red",
+    alignSelf: "flex-start",
+    marginBottom: 10,
   },
 });
