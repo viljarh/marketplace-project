@@ -1,9 +1,8 @@
-// components/ProductCard.tsx
 import React from "react";
 import { TouchableOpacity, View, Text, Image, StyleSheet } from "react-native";
-import { Product } from "../firebase/firebaseTypes";
 import { useRouter } from "expo-router";
 import { COLORS, SPACING } from "constants/constants";
+import { Product } from "types/types";
 
 interface ProductCardProps {
   product: Product;
@@ -46,7 +45,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: "100%",
-    height: 160,
+    height: 200,
     backgroundColor: COLORS.secondary,
     borderRadius: 8,
     overflow: "hidden",
