@@ -23,12 +23,14 @@ import {
   getFirestore,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import uuid from "react-native-uuid";
 import { Category, FavoriteProduct, Product } from "types/types";
+import { has } from "lodash";
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY!,
@@ -118,7 +120,9 @@ export async function fetchProductsById(productId: string) {
   }
 }
 
-export async function fetchUserById(userId: string): Promise<{ email: string } | null> {
+export async function fetchUserById(
+  userId: string,
+): Promise<{ email: string } | null> {
   const userRef = doc(db, "users", userId);
   const userSnap = await getDoc(userRef);
 
@@ -367,4 +371,37 @@ export const deletePostById = async (postId: string) => {
     throw error;
   }
 };
+
+export async function fetchProductById(productId: string) {
+  try {
+    const productRef = doc(db, "products", productId);
+    const productSnap = await getDoc(productRef);
+
+    if (productSnap.exists()) {
+      return { id: productSnap.id, ...productSnap.data() } as Product;
+    } else {
+      console.error("Could not find that product");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching product with ID: ", error);
+    return null;
+  }
+}
+
+export async function handleUpdatePost(
+  productId: string,
+  updatedFields: Partial<Product>,
+) {
+  try {
+    const productRef = doc(db, "products", productId);
+    await updateDoc(productRef, updatedFields);
+
+    console.log("Product updated successfully");
+    return true;
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return false;
+  }
+}
 export { db };

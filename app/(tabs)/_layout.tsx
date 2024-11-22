@@ -1,7 +1,7 @@
 import { Tabs, router } from "expo-router";
 import { Text } from "react-native";
 import {
-  ChatBubbleBottomCenterTextIcon,
+  DocumentIcon,
   HeartIcon,
   HomeIcon,
   PlusCircleIcon,
@@ -74,12 +74,10 @@ const TabLayout = () => {
 
         {/* Messages */}
         <Tabs.Screen
-          name="messages"
+          name="my-posts"
           options={{
-            tabBarLabel: "Messages",
-            tabBarIcon: ({ color }) => (
-              <ChatBubbleBottomCenterTextIcon size={24} color={color} />
-            ),
+            tabBarLabel: "My Posts",
+            tabBarIcon: ({ color }) => <DocumentIcon size={24} color={color} />,
           }}
         />
 

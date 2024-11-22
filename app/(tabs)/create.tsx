@@ -46,9 +46,8 @@ export default function CreatePostScreen() {
 
   const conditions = [
     { label: "New", value: "New" },
-    { label: "Used - Good", value: "Used - Good" },
-    { label: "Used - Fair", value: "Used - Fair" },
-    { label: "Used - Poor", value: "Used - Poor" },
+    { label: "Used - Good Condition", value: "Used - Good Condition" },
+    { label: "Used - Poor Condition", value: "Used - Poor Condition" },
   ];
 
   const pickImage = async () => {

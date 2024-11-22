@@ -12,7 +12,6 @@ import {
   ArrowRightEndOnRectangleIcon,
   Cog6ToothIcon,
   DocumentIcon,
-  HeartIcon,
   UserCircleIcon,
 } from "react-native-heroicons/outline";
 import { SafeAreaView } from "react-native-safe-area-context";
