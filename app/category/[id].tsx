@@ -30,10 +30,8 @@ export default function CategoryFeed() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<string | null>(null);
   const params = useLocalSearchParams();
   const categoryId = params.id as string;
-  // const categoryName = params.categoryName as string | undefined;
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -60,8 +58,8 @@ export default function CategoryFeed() {
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
+
   const applyFilter = (filterType: string) => {
-    setFilter(filterType);
     bottomSheetRef.current?.close();
 
     const sortedProducts = [...products];
