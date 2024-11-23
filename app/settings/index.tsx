@@ -78,20 +78,19 @@ export default function SettingsPage() {
       </View>
 
       <View style={styles.container}>
-        {/* Password Update Section */}
         <Text style={styles.sectionTitle}>Update Password</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="New Password"
-          value={newPassword}
-          onChangeText={setNewPassword}
-          secureTextEntry
-        />
         <TextInput
           style={styles.input}
           placeholder="Current Password"
           value={currentPassword}
           onChangeText={setCurrentPassword}
+          secureTextEntry
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="New Password"
+          value={newPassword}
+          onChangeText={setNewPassword}
           secureTextEntry
         />
         <TouchableOpacity
