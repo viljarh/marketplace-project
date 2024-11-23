@@ -18,11 +18,7 @@ import {
 } from "constants/constants";
 import { deletePostById, fetchPostsByUser } from "firebase/firebase";
 import { router } from "expo-router";
-import {
-  ChevronLeftIcon,
-  PencilIcon,
-  TrashIcon,
-} from "react-native-heroicons/outline";
+import { PencilIcon, TrashIcon } from "react-native-heroicons/outline";
 import { Product } from "types/types";
 import ProductCard from "components/ProductCard";
 
@@ -70,7 +66,7 @@ export default function MyPostsScreen() {
               setLoading(true);
               await deletePostById(postId);
               setPosts((prevPosts) =>
-                prevPosts.filter((post) => post.id !== postId),
+                prevPosts.filter((post) => post.id !== postId)
               );
               Alert.alert("Success", "Post deleted successfully.");
             } catch (error) {
@@ -81,7 +77,7 @@ export default function MyPostsScreen() {
             }
           },
         },
-      ],
+      ]
     );
   };
 
@@ -101,27 +97,25 @@ export default function MyPostsScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {posts.length > 0 ? (
-          posts.map((post) => (
-            <View key={post.id} style={styles.postContainer}>
-              <View style={styles.cardWrapper}>
-                {/* Product Card */}
+          <View style={styles.postsContainer}>
+            {posts.map((post) => (
+              <View key={post.id} style={styles.postWrapper}>
                 <ProductCard product={post} />
-                {/* Edit and Delete Buttons Overlaid */}
-                <View style={styles.actionsOverlay}>
+                <View style={styles.iconsContainer}>
                   <TouchableOpacity onPress={() => handleEditPost(post.id)}>
-                    <View style={styles.actionIcon}>
-                      <PencilIcon size={18} color={COLORS.white} />
+                    <View style={styles.icon}>
+                      <PencilIcon size={18} />
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => handleDeletePost(post.id)}>
-                    <View style={styles.actionIcon}>
-                      <TrashIcon size={18} color={COLORS.white} />
+                    <View style={styles.icon}>
+                      <TrashIcon size={18} />
                     </View>
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>
-          ))
+            ))}
+          </View>
         ) : (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>
@@ -139,11 +133,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   header: {
     flexDirection: "row",
     justifyContent: "center",
@@ -153,47 +142,37 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.accent,
   },
-  backButton: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  backText: {
-    color: COLORS.textSecondary,
-    marginLeft: SPACING.small,
-  },
   headerTitle: {
     fontSize: FONT_SIZES.large,
     fontWeight: "600",
     color: COLORS.textPrimary,
   },
-  headerSpacer: {
-    width: 50,
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   scrollContainer: {
-    paddingHorizontal: SPACING.medium,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
+    padding: SPACING.medium,
   },
-  postContainer: {
-    width: "48%",
-    marginBottom: SPACING.large,
+
+  postsContainer: {},
+
+  postWrapper: {
+    flexDirection: "column",
+    alignItems: "center",
   },
-  cardWrapper: {
-    position: "relative",
-  },
-  actionsOverlay: {
-    position: "absolute",
-    top: SPACING.small,
-    right: SPACING.small,
+
+  iconsContainer: {
     flexDirection: "row",
     gap: SPACING.small,
+    marginBottom: SPACING.small,
   },
-  actionIcon: {
-    backgroundColor: COLORS.primary,
-    padding: SPACING.small / 2,
+
+  icon: {
+    padding: SPACING.small,
+    backgroundColor: COLORS.secondary,
     borderRadius: BORDER_RADIUS.small,
-    opacity: 0.8,
   },
   emptyContainer: {
     flex: 1,
