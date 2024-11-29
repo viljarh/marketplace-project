@@ -49,37 +49,32 @@ const storage = getStorage(app);
 
 export const signUp = async (
   email: string,
-  password: string,
+  password: string
 ): Promise<User | null> => {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password,
-    );
-    const user = userCredential.user;
-    const userRef = doc(db, "users", user.uid);
-    await setDoc(userRef, {
-      email: user.email,
-      createdAt: new Date(),
-    });
-    console.log("User created and saved to FireStore!");
+  const userCredential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+  const user = userCredential.user;
+  const userRef = doc(db, "users", user.uid);
+  await setDoc(userRef, {
+    email: user.email,
+    createdAt: new Date(),
+  });
+  console.log("User created and saved to FireStore!");
 
-    return user;
-  } catch (error) {
-    console.error("Error signing up or saving user to firestore:", error);
-    return null;
-  }
+  return user;
 };
 
 export const signIn = async (
   email: string,
-  password: string,
+  password: string
 ): Promise<User | null> => {
   const userCredential = await signInWithEmailAndPassword(
     auth,
     email,
-    password,
+    password
   );
   return userCredential.user;
 };
@@ -89,7 +84,7 @@ export const signOut = async (): Promise<void> => {
 };
 
 export const onAuthStateChangeListener = (
-  callback: (user: User | null) => void,
+  callback: (user: User | null) => void
 ) => {
   return onAuthStateChanged(auth, callback);
 };
@@ -120,7 +115,7 @@ export async function fetchProductsById(productId: string) {
 }
 
 export async function fetchUserById(
-  userId: string,
+  userId: string
 ): Promise<{ email: string } | null> {
   const userRef = doc(db, "users", userId);
   const userSnap = await getDoc(userRef);
@@ -142,7 +137,7 @@ export const handleCreatePost = async (
   price: string,
   category: string,
   condition: string,
-  imageUrl: string | null,
+  imageUrl: string | null
 ): Promise<string | null> => {
   const currentUser = auth.currentUser;
 
@@ -198,7 +193,7 @@ export async function fetchCategories(): Promise<Category[]> {
 // }
 
 export async function fetchProductByCategory(
-  category: string,
+  category: string
 ): Promise<Product[]> {
   const productRef = collection(db, "products");
   const q = query(productRef, where("category", "==", category));
@@ -262,7 +257,7 @@ export const fetchFavorites = async (): Promise<Product[]> => {
 
   const favoritesQuery = query(
     collection(db, "favorites"),
-    where("userId", "==", currentUser.uid),
+    where("userId", "==", currentUser.uid)
   );
 
   const favoritesSnapshot = await getDocs(favoritesQuery);
@@ -273,7 +268,7 @@ export const fetchFavorites = async (): Promise<Product[]> => {
     const favoriteData = favoriteDoc.data() as FavoriteProduct;
 
     const productDoc = await getDoc(
-      doc(db, "products", favoriteData.productId),
+      doc(db, "products", favoriteData.productId)
     );
 
     if (productDoc.exists()) {
@@ -340,7 +335,7 @@ export const reauthenticateUser = async (currentPassword: string) => {
 
   const credential = EmailAuthProvider.credential(
     currentUser.email!,
-    currentPassword,
+    currentPassword
   );
 
   if (!currentUser.email) {
@@ -390,7 +385,7 @@ export async function fetchProductById(productId: string) {
 
 export async function handleUpdatePost(
   productId: string,
-  updatedFields: Partial<Product>,
+  updatedFields: Partial<Product>
 ) {
   try {
     const productRef = doc(db, "products", productId);
