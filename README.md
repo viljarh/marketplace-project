@@ -8,9 +8,6 @@ Marketplace application built with React Native for a school project.
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Folder Structure](#folder-structure)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Introduction
 
@@ -54,5 +51,3 @@ To get started with the project, follow these steps:
 - Manage Favorites: Add or remove products from favorites.
 - Notifications: Receive notifications for newly added products.
 - Profile Management: View and update user profile information.
-
-
