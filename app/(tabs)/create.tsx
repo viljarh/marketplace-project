@@ -152,7 +152,7 @@ export default function CreatePostScreen() {
         <Text style={styles.label}>Price</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter price"
+          placeholder="Enter price in NOK"
           keyboardType="numeric"
           value={price}
           onChangeText={(text) => {
@@ -191,10 +191,10 @@ export default function CreatePostScreen() {
           zIndex={4000}
         />
 
-        <Text style={styles.label}>Images</Text>
+        <Text style={styles.label}>Image</Text>
         <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
           <CameraIcon size={24} color="gray" />
-          <Text style={styles.uploadButtonText}>Upload Images</Text>
+          <Text style={styles.uploadButtonText}>Upload Image</Text>
         </TouchableOpacity>
 
         <ScrollView nestedScrollEnabled style={styles.imageContainer}>
