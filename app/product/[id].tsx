@@ -140,7 +140,7 @@ export default function ProductDetails() {
           <Text style={styles.price}>{product.price} NOK</Text>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => Alert.alert("Buy button pressed")}
+            onPress={() => router.push(`/checkout/${product.id}`)}
           >
             <Text style={styles.buttonText}>Buy this product</Text>
           </TouchableOpacity>
