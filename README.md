@@ -36,9 +36,11 @@ To get started with the project, follow these steps:
    git clone https://github.com/your-username/marketplace-app.git
    cd marketplace-app
 2. Install dependencies:
+    ```sh
     npm install
 
 3. Start the developement server:
+    ```sh
     npm start 
 
 ## Usage
