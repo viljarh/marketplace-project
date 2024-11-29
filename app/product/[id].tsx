@@ -68,7 +68,11 @@ export default function ProductDetails() {
 
           try {
             const userData = await fetchUserById(productData.userId);
-            setUser(userData);
+            if (userData) {
+              setUser(userData);
+            } else {
+              console.log("User not found for userId:", productData.userId);
+            }
           } catch (error) {
             console.log("Error fetching user data:", error);
           }
@@ -140,7 +144,7 @@ export default function ProductDetails() {
           <Text style={styles.price}>{product.price} NOK</Text>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => router.push(`/checkout/${product.id}`)}
+            onPress={() => Alert.alert("Buy button pressed")}
           >
             <Text style={styles.buttonText}>Buy this product</Text>
           </TouchableOpacity>
@@ -152,7 +156,11 @@ export default function ProductDetails() {
           <Text style={styles.sectionText}>{product.condition}</Text>
 
           <Text style={styles.sectionTitle}>Published by</Text>
-          {user && <Text style={styles.sectionText}>{user.email}</Text>}
+          {user ? (
+            <Text style={styles.sectionText}>{user.email}</Text>
+          ) : (
+            <Text style={styles.sectionText}>User not found</Text>
+          )}
         </View>
       </ScrollView>
 
