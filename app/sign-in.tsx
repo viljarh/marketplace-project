@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useSession } from "./ctx";
-import { router } from "expo-router";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useRouter } from "expo-router";
 
 // SignIn component for user authentication
 export default function SignIn() {
@@ -18,6 +18,7 @@ export default function SignIn() {
   const [error, setError] = useState<string | null>(null);
   const [isSignUpMode, setIsSignUpMode] = useState(false);
 
+  const router = useRouter();
   // Handle authentication action
   const handleAuth = async () => {
     setError(null);

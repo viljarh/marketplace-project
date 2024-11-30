@@ -1,6 +1,6 @@
 import React from "react";
 import { useSession } from "app/ctx";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import {
   Text,
   View,
@@ -20,6 +20,7 @@ import { COLORS, FONT_SIZES, SPACING } from "constants/constants";
 // ProfileScreen component for displaying user's profile and menu options
 export default function ProfileScreen() {
   const { session, signOut } = useSession();
+  const router = useRouter();
 
   // Handle sign out action
   const handleSignOut = async () => {

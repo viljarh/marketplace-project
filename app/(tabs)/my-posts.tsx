@@ -17,10 +17,10 @@ import {
   BORDER_RADIUS,
 } from "constants/constants";
 import { deletePostById, fetchPostsByUser } from "firebase/firebase";
-import { router } from "expo-router";
 import { PencilIcon, TrashIcon } from "react-native-heroicons/outline";
 import { Product } from "types/types";
 import ProductCard from "components/ProductCard";
+import { useRouter } from "expo-router";
 
 // MyPostsScreen component for displaying user's posts
 export default function MyPostsScreen() {
@@ -29,6 +29,7 @@ export default function MyPostsScreen() {
   const [posts, setPosts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const router = useRouter();
   // Fetch user's posts when the component mounts or session changes
   useEffect(() => {
     const loadUserPosts = async () => {
@@ -71,7 +72,7 @@ export default function MyPostsScreen() {
               setLoading(true);
               await deletePostById(postId);
               setPosts((prevPosts) =>
-                prevPosts.filter((post) => post.id !== postId)
+                prevPosts.filter((post) => post.id !== postId),
               );
               Alert.alert("Success", "Post deleted successfully.");
             } catch (error) {
@@ -82,7 +83,7 @@ export default function MyPostsScreen() {
             }
           },
         },
-      ]
+      ],
     );
   };
 

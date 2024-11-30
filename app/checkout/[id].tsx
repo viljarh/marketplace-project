@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import {
   COLORS,
@@ -31,6 +31,7 @@ export default function CheckoutScreen() {
   const [loading, setLoading] = useState(true);
   const [address, setAddress] = useState("");
 
+  const router = useRouter();
   // Fetch product details when the component mounts or ID changes
   useEffect(() => {
     const loadProductDetails = async () => {
@@ -62,7 +63,7 @@ export default function CheckoutScreen() {
 
     Alert.alert(
       "Order Confirmed",
-      `Your order for "${product?.title}" will be delivered to "${address}" in 3 days.`,
+      `Your order for "${product?.title}" will be delivered to "${address}" in 3 days.`
     );
   };
 

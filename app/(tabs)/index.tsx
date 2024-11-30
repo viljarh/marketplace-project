@@ -22,9 +22,9 @@ import {
 } from "constants/constants";
 import ProductCard from "components/ProductCard";
 import { fetchCategoriesFromProducts, fetchProducts } from "firebase/firebase";
-import { router } from "expo-router";
 import { debounce } from "lodash";
 import { Product } from "types/types";
+import { useRouter } from "expo-router";
 
 // Index component for the main screen
 export default function Index() {
@@ -34,15 +34,16 @@ export default function Index() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const router = useRouter();
   // Debounced search function to filter products based on search query
   const debouncedSearch = useCallback(
     debounce((query: string) => {
       const filteredData = products.filter((product) =>
-        product.title.toLowerCase().includes(query.toLowerCase()),
+        product.title.toLowerCase().includes(query.toLowerCase())
       );
       setFilteredProducts(filteredData);
     }, 300),
-    [products],
+    [products]
   );
 
   // Function to fetch products and categories from Firebase
@@ -64,7 +65,7 @@ export default function Index() {
   useFocusEffect(
     useCallback(() => {
       fetchData();
-    }, [fetchData]),
+    }, [fetchData])
   );
 
   // Update filtered products when search query changes

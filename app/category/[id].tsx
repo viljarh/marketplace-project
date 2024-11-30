@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   ScrollView,
   Text,
@@ -37,6 +37,7 @@ export default function CategoryFeed() {
   const categoryId = params.id as string;
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
+  const router = useRouter();
   // Fetch products by category when the component mounts or categoryId changes
   useEffect(() => {
     const fetchCategoryProducts = async () => {
@@ -107,12 +108,12 @@ export default function CategoryFeed() {
         break;
       case "mostExpensive":
         sortedProducts.sort(
-          (a, b) => parseFloat(b.price) - parseFloat(a.price),
+          (a, b) => parseFloat(b.price) - parseFloat(a.price)
         );
         break;
       case "leastExpensive":
         sortedProducts.sort(
-          (a, b) => parseFloat(a.price) - parseFloat(b.price),
+          (a, b) => parseFloat(a.price) - parseFloat(b.price)
         );
         break;
       case "condition":

@@ -10,7 +10,7 @@ import {
   Modal,
 } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -37,6 +37,7 @@ export default function ProductDetails() {
   const [isFavorited, setIsFavorited] = useState(false);
   const [user, setUser] = useState<{ email: string } | null>(null);
 
+  const router = useRouter();
   // Toggle modal visibility
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);

@@ -16,7 +16,7 @@ import {
   BORDER_RADIUS,
 } from "constants/constants";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 
 // SettingsPage component for updating user settings
 export default function SettingsPage() {
@@ -24,6 +24,7 @@ export default function SettingsPage() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const router = useRouter();
   // Handle password update action
   const handleUpdatePassword = async () => {
     if (!newPassword) {
@@ -175,3 +176,4 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
+

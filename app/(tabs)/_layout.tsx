@@ -1,4 +1,4 @@
-import { Tabs, router } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import { Text } from "react-native";
 import {
   DocumentIcon,
@@ -14,6 +14,8 @@ import { COLORS } from "constants/constants";
 // TabLayout component for managing the tab navigation layout
 const TabLayout = () => {
   const { session, loading } = useSession();
+
+  const router = useRouter();
 
   // Redirect to sign-in page if not authenticated
   useEffect(() => {
