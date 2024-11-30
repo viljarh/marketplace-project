@@ -11,19 +11,23 @@ import { useSession } from "../ctx";
 import { useEffect } from "react";
 import { COLORS } from "constants/constants";
 
+// TabLayout component for managing the tab navigation layout
 const TabLayout = () => {
   const { session, loading } = useSession();
 
+  // Redirect to sign-in page if not authenticated
   useEffect(() => {
     if (!loading && !session) {
       router.replace("/sign-in");
     }
   }, [loading, session, router]);
 
+  // Show loading text while checking authentication status
   if (loading) {
     return <Text>Loading...</Text>;
   }
 
+  // Render tab navigation if authenticated
   if (session) {
     return (
       <Tabs
@@ -72,7 +76,7 @@ const TabLayout = () => {
           }}
         />
 
-        {/* Messages */}
+        {/* My Posts */}
         <Tabs.Screen
           name="my-posts"
           options={{

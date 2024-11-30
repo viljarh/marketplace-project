@@ -22,11 +22,14 @@ import { PencilIcon, TrashIcon } from "react-native-heroicons/outline";
 import { Product } from "types/types";
 import ProductCard from "components/ProductCard";
 
+// MyPostsScreen component for displaying user's posts
 export default function MyPostsScreen() {
+  // State variables
   const { session } = useSession();
   const [posts, setPosts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch user's posts when the component mounts or session changes
   useEffect(() => {
     const loadUserPosts = async () => {
       if (session) {
@@ -45,10 +48,12 @@ export default function MyPostsScreen() {
     loadUserPosts();
   }, [session]);
 
+  // Handle edit post action
   const handleEditPost = (postId: string) => {
     router.push({ pathname: "/edit-post/[id]", params: { id: postId } });
   };
 
+  // Handle delete post action
   const handleDeletePost = async (postId: string) => {
     Alert.alert(
       "Confirm Delete",
@@ -81,6 +86,7 @@ export default function MyPostsScreen() {
     );
   };
 
+  // Show loading indicator while data is being fetched
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingContainer}>

@@ -26,12 +26,15 @@ import { router } from "expo-router";
 import { debounce } from "lodash";
 import { Product } from "types/types";
 
+// Index component for the main screen
 export default function Index() {
+  // State variables
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Debounced search function to filter products based on search query
   const debouncedSearch = useCallback(
     debounce((query: string) => {
       const filteredData = products.filter((product) =>
@@ -42,6 +45,7 @@ export default function Index() {
     [products],
   );
 
+  // Function to fetch products and categories from Firebase
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
@@ -56,16 +60,19 @@ export default function Index() {
     }
   }, []);
 
+  // Fetch data when the screen is focused
   useFocusEffect(
     useCallback(() => {
       fetchData();
     }, [fetchData]),
   );
 
+  // Update filtered products when search query changes
   useEffect(() => {
     debouncedSearch(searchQuery);
   }, [searchQuery, debouncedSearch]);
 
+  // Show loading indicator while data is being fetched
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingContainer}>

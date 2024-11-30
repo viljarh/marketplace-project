@@ -26,7 +26,9 @@ import {
   SPACING,
 } from "constants/constants";
 
+// CreatePostScreen component for creating a new post
 export default function CreatePostScreen() {
+  // State variables
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -39,17 +41,20 @@ export default function CreatePostScreen() {
 
   const router = useRouter();
 
+  // Category items for the dropdown picker
   const categoryItems = CATEGORIES.map((category) => ({
     label: `${category.icon} ${category.name}`,
     value: category.id,
   }));
 
+  // Condition items for the dropdown picker
   const conditions = [
     { label: "New", value: "New" },
     { label: "Used - Good Condition", value: "Used - Good Condition" },
     { label: "Used - Poor Condition", value: "Used - Poor Condition" },
   ];
 
+  // Function to pick an image from the library
   const pickImage = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -69,10 +74,12 @@ export default function CreatePostScreen() {
     }
   };
 
+  // Function to remove an image from the list
   const removeImage = (index: number) => {
     setImage((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // Function to create a new product post
   const createProduct = async () => {
     setErrorMessage("");
 
@@ -93,7 +100,7 @@ export default function CreatePostScreen() {
       price,
       category,
       condition,
-      imageUrls[0],
+      imageUrls[0]
     );
 
     if (newProductId) {

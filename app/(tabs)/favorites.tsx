@@ -13,10 +13,13 @@ import ProductCard from "components/ProductCard";
 import { Product } from "types/types";
 import { useFocusEffect } from "@react-navigation/native";
 
+// FavoritesScreen component for displaying user's favorite products
 export default function FavoritesScreen() {
+  // State variables
   const [favorites, setFavorites] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Function to load favorite products from Firebase
   const loadFavorites = async () => {
     try {
       const fetchedFavorites = await fetchFavorites();
@@ -28,11 +31,14 @@ export default function FavoritesScreen() {
     }
   };
 
+  // Load favorite products when the screen is focused
   useFocusEffect(
     useCallback(() => {
       loadFavorites();
-    }, []),
+    }, [])
   );
+
+  // Show loading indicator while data is being fetched
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
