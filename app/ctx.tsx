@@ -13,6 +13,7 @@ import {
 } from "../firebase/firebase";
 import { User } from "firebase/auth";
 
+// Define the shape of the AuthContext
 interface AuthContextType {
   session: User | null;
   loading: boolean;
@@ -21,8 +22,10 @@ interface AuthContextType {
   signOut: () => Promise<void>;
 }
 
+// Create the AuthContext with an undefined initial value
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Custom hook to use the AuthContext
 export const useSession = () => {
   const context = useContext(AuthContext);
   if (!context)
@@ -30,10 +33,12 @@ export const useSession = () => {
   return context;
 };
 
+// SessionProvider component to provide the AuthContext to its children
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Function to get a user-friendly error message based on the error code
   const getFriendlyErrorMessage = (errorCode: string): string => {
     switch (errorCode) {
       case "auth/invalid-email":
@@ -51,6 +56,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Effect to listen for authentication state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChangeListener((user) => {
       setSession(user);
@@ -59,6 +65,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     return unsubscribe;
   }, []);
 
+  // Function to handle user sign-in
   const handleSignIn = async (email: string, password: string) => {
     setLoading(true);
     try {
@@ -71,6 +78,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Function to handle user sign-up
   const handleSignUp = async (email: string, password: string) => {
     setLoading(true);
     try {
@@ -83,6 +91,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Function to handle user sign-out
   const handleSignOut = async () => {
     setLoading(true);
     await signOut().catch((error) => {

@@ -8,6 +8,7 @@ import {
   BORDER_RADIUS,
 } from "constants/constants";
 
+// NotFoundScreen component for displaying a 404 error message
 export default function NotFoundScreen() {
   return (
     <View style={styles.container}>

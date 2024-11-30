@@ -18,11 +18,14 @@ import { useEffect, useState } from "react";
 import { db } from "../../firebase/firebase";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 
+// NotificationsPage component for displaying notifications
 export default function NotificationsPage() {
+  // State variable for notifications
   const [notifications, setNotifications] = useState<
     { id: string; message: string; time: string }[]
   >([]);
 
+  // Fetch notifications when the component mounts
   useEffect(() => {
     const q = query(
       collection(db, "products"),
@@ -45,6 +48,7 @@ export default function NotificationsPage() {
     return () => unsubscribe(); 
   }, []);
 
+  // Function to get time ago from timestamp
   const getTimeAgo = (timestamp: Date) => {
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - timestamp.getTime()) / 1000);

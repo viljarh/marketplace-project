@@ -3,6 +3,7 @@ import React from "react";
 import { SessionProvider } from "./ctx";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+// RootLayout component for providing session and safe area context
 export default function RootLayout() {
   return (
     <SafeAreaProvider>

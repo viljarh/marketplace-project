@@ -28,6 +28,7 @@ import {
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { Product } from "types/types";
 
+// ProductDetails component for displaying product details
 export default function ProductDetails() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -36,10 +37,12 @@ export default function ProductDetails() {
   const [isFavorited, setIsFavorited] = useState(false);
   const [user, setUser] = useState<{ email: string } | null>(null);
 
+  // Toggle modal visibility
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
+  // Handle favorite toggle action
   const handleFavoriteToggle = async () => {
     try {
       if (product?.id) {
@@ -52,6 +55,7 @@ export default function ProductDetails() {
     }
   };
 
+  // Fetch product details when the component mounts or ID changes
   useEffect(() => {
     if (typeof id === "string") {
       fetchProductsById(id).then(async (data) => {
@@ -82,6 +86,7 @@ export default function ProductDetails() {
     }
   }, [id]);
 
+  // Show loading indicator while data is being fetched
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
@@ -90,6 +95,7 @@ export default function ProductDetails() {
     );
   }
 
+  // Show error message if product is not found
   if (!product) {
     console.log("Product not found", product);
     return (

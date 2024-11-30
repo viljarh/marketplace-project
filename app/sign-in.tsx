@@ -10,6 +10,7 @@ import { useSession } from "./ctx";
 import { router } from "expo-router";
 import Icon from "react-native-vector-icons/Ionicons";
 
+// SignIn component for user authentication
 export default function SignIn() {
   const { signIn, signUp, loading } = useSession();
   const [email, setEmail] = useState("");
@@ -17,6 +18,7 @@ export default function SignIn() {
   const [error, setError] = useState<string | null>(null);
   const [isSignUpMode, setIsSignUpMode] = useState(false);
 
+  // Handle authentication action
   const handleAuth = async () => {
     setError(null);
     try {

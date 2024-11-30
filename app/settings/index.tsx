@@ -18,10 +18,13 @@ import {
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { router } from "expo-router";
 
+// SettingsPage component for updating user settings
 export default function SettingsPage() {
   const [newPassword, setNewPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Handle password update action
   const handleUpdatePassword = async () => {
     if (!newPassword) {
       Alert.alert("Validation Error", "Please enter a new password.");
