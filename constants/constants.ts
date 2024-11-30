@@ -1,3 +1,5 @@
+// File for storing constants, for better reusability
+
 export const CATEGORIES = [
   { id: "electronics", name: "Electronics", icon: "📱" },
   { id: "furniture", name: "Furniture", icon: "🛋️" },

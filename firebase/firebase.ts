@@ -47,6 +47,7 @@ export const auth: Auth = initializeAuth(app, {
 });
 const storage = getStorage(app);
 
+// Function to sign up a new user
 export const signUp = async (
   email: string,
   password: string
@@ -67,6 +68,7 @@ export const signUp = async (
   return user;
 };
 
+// Function to sign in an existing user
 export const signIn = async (
   email: string,
   password: string
@@ -79,16 +81,19 @@ export const signIn = async (
   return userCredential.user;
 };
 
+// Function to sign out the current user
 export const signOut = async (): Promise<void> => {
   await firebaseSignOut(auth);
 };
 
+// Function to listen for authentication state changes
 export const onAuthStateChangeListener = (
   callback: (user: User | null) => void
 ) => {
   return onAuthStateChanged(auth, callback);
 };
 
+// Function to fetch all products
 export async function fetchProducts(): Promise<Product[]> {
   const productsCollection = collection(db, "products");
   const productsQuery = query(productsCollection);
@@ -102,6 +107,7 @@ export async function fetchProducts(): Promise<Product[]> {
   return products;
 }
 
+// Function to fetch a product by its ID
 export async function fetchProductsById(productId: string) {
   const productRef = doc(db, "products", productId);
   const productSnap = await getDoc(productRef);
@@ -114,6 +120,7 @@ export async function fetchProductsById(productId: string) {
   }
 }
 
+// Function to fetch a user by their ID
 export async function fetchUserById(
   userId: string
 ): Promise<{ email: string } | null> {
@@ -131,6 +138,7 @@ export async function fetchUserById(
   }
 }
 
+// Function to create a new product post
 export const handleCreatePost = async (
   title: string,
   description: string,
@@ -166,6 +174,7 @@ export const handleCreatePost = async (
   }
 };
 
+// Function to fetch all categories
 export async function fetchCategories(): Promise<Category[]> {
   const categoriesCollection = collection(db, "categories");
   const categoriesQuery = query(categoriesCollection);
@@ -178,20 +187,7 @@ export async function fetchCategories(): Promise<Category[]> {
   return categories;
 }
 
-// export async function fetchProductByCategory(
-//   category: string,
-// ): Promise<Product[]> {
-//   const productRef = collection(db, "products");
-//   const q = query(productRef, where("category", "==", category));
-//   const querySnapshot = await getDocs(q);
-//
-//   const products = querySnapshot.docs.map((doc) => ({
-//     id: doc.id,
-//     ...doc.data(),
-//   })) as Product[];
-//   return products;
-// }
-
+// Function to fetch products by category
 export async function fetchProductByCategory(
   category: string
 ): Promise<Product[]> {
@@ -211,6 +207,8 @@ export async function fetchProductByCategory(
 
   return products;
 }
+
+// Function to fetch categories from products
 export async function fetchCategoriesFromProducts(): Promise<string[]> {
   const productsCollection = collection(db, "products");
   const querySnapshot = await getDocs(productsCollection);
@@ -226,6 +224,7 @@ export async function fetchCategoriesFromProducts(): Promise<string[]> {
   return Array.from(categoriesSet);
 }
 
+// Function to upload an image to Firebase storage
 export const uploadImageToFirebase = async (uri: string): Promise<string> => {
   const response = await fetch(uri);
   const blob = await response.blob();
@@ -237,6 +236,7 @@ export const uploadImageToFirebase = async (uri: string): Promise<string> => {
   return downloadUrl;
 };
 
+// Function to fetch posts by a user
 export const fetchPostsByUser = async (userId: string): Promise<Product[]> => {
   const postsRef = collection(db, "products");
   const q = query(postsRef, where("userId", "==", userId));
@@ -250,6 +250,7 @@ export const fetchPostsByUser = async (userId: string): Promise<Product[]> => {
   return posts;
 };
 
+// Function to fetch favorite products
 export const fetchFavorites = async (): Promise<Product[]> => {
   const currentUser = auth.currentUser;
 
@@ -283,6 +284,7 @@ export const fetchFavorites = async (): Promise<Product[]> => {
   return products;
 };
 
+// Function to toggle favorite status of a product
 export const toggleFavoriteProduct = async (productId: string) => {
   const currentUser = auth.currentUser;
 
@@ -311,6 +313,7 @@ export const toggleFavoriteProduct = async (productId: string) => {
   }
 };
 
+// Function to check if a product is favorited
 export const checkIfFavorited = async (productId: string): Promise<boolean> => {
   const currentUser = auth.currentUser;
 
@@ -326,6 +329,7 @@ export const checkIfFavorited = async (productId: string): Promise<boolean> => {
   return favoriteDoc.exists();
 };
 
+// Function to reauthenticate a user
 export const reauthenticateUser = async (currentPassword: string) => {
   const currentUser = auth.currentUser;
 
@@ -345,6 +349,7 @@ export const reauthenticateUser = async (currentPassword: string) => {
   await reauthenticateWithCredential(currentUser, credential);
 };
 
+// Function to update a user's password
 export const updateUserPassword = async (newPassword: string) => {
   const currentUser = auth.currentUser;
 
@@ -355,6 +360,7 @@ export const updateUserPassword = async (newPassword: string) => {
   await updatePassword(currentUser, newPassword);
 };
 
+// Function to delete a post by its ID
 export const deletePostById = async (postId: string) => {
   try {
     const postRef = doc(db, "products", postId);
@@ -366,6 +372,7 @@ export const deletePostById = async (postId: string) => {
   }
 };
 
+// Function to fetch a product by its ID
 export async function fetchProductById(productId: string) {
   try {
     const productRef = doc(db, "products", productId);
@@ -383,6 +390,7 @@ export async function fetchProductById(productId: string) {
   }
 }
 
+// Function to update a product post
 export async function handleUpdatePost(
   productId: string,
   updatedFields: Partial<Product>
@@ -398,4 +406,5 @@ export async function handleUpdatePost(
     return false;
   }
 }
+
 export { db };

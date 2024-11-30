@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { COLORS, SPACING } from "constants/constants";
 import { Product } from "types/types";
 
+// ProductCard component for displaying a product card
 interface ProductCardProps {
   product: Product;
 }
