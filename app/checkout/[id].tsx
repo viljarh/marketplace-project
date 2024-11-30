@@ -22,12 +22,16 @@ import {
 import { fetchProductsById } from "firebase/firebase";
 import { Product } from "types/types";
 
+// CheckoutScreen component for displaying product details and handling checkout
 export default function CheckoutScreen() {
+  // Get the product ID from the URL parameters
   const { id } = useLocalSearchParams();
+  // State variables
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [address, setAddress] = useState("");
 
+  // Fetch product details when the component mounts or ID changes
   useEffect(() => {
     const loadProductDetails = async () => {
       if (typeof id === "string") {
@@ -49,6 +53,7 @@ export default function CheckoutScreen() {
     loadProductDetails();
   }, [id]);
 
+  // Handle checkout action
   const handleCheckout = () => {
     if (!address) {
       Alert.alert("Error", "Please fill in the address.");
@@ -61,6 +66,7 @@ export default function CheckoutScreen() {
     );
   };
 
+  // Show loading indicator while data is being fetched
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
@@ -69,6 +75,7 @@ export default function CheckoutScreen() {
     );
   }
 
+  // Show error message if product is not found
   if (!product) {
     return (
       <SafeAreaView style={styles.loadingContainer}>

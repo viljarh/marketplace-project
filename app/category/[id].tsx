@@ -26,14 +26,18 @@ import {
 import { Timestamp } from "firebase/firestore";
 import { Product } from "types/types";
 
+// CategoryFeed component for displaying products by category
 export default function CategoryFeed() {
+  // Reference to the bottom sheet
   const bottomSheetRef = useRef<BottomSheet>(null);
+  // State variables
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const params = useLocalSearchParams();
   const categoryId = params.id as string;
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
+  // Fetch products by category when the component mounts or categoryId changes
   useEffect(() => {
     const fetchCategoryProducts = async () => {
       setLoading(true);
@@ -51,14 +55,17 @@ export default function CategoryFeed() {
     if (categoryId) fetchCategoryProducts();
   }, [categoryId]);
 
+  // Open the bottom sheet
   const openBottomSheet = () => {
     bottomSheetRef.current?.expand();
   };
 
+  // Handle bottom sheet changes
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
 
+  // Apply filter to the products
   const applyFilter = (filterType: string) => {
     bottomSheetRef.current?.close();
 
@@ -118,6 +125,7 @@ export default function CategoryFeed() {
     setFilteredProducts(sortedProducts);
   };
 
+  // Show loading indicator while data is being fetched
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingContainer}>

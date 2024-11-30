@@ -28,10 +28,12 @@ import {
   uploadImageToFirebase,
 } from "firebase/firebase";
 
+// EditPostScreen component for editing a product post
 export default function EditPostScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
 
+  // State variables
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -42,6 +44,7 @@ export default function EditPostScreen() {
   const [image, setImage] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Fetch product details when the component mounts or ID changes
   useEffect(() => {
     const loadProductDetails = async () => {
       if (id && typeof id === "string") {
@@ -69,17 +72,20 @@ export default function EditPostScreen() {
     loadProductDetails();
   }, [id]);
 
+  // Category items for the dropdown
   const categoryItems = CATEGORIES.map((category) => ({
     label: `${category.icon} ${category.name}`,
     value: category.id,
   }));
 
+  // Condition items for the dropdown
   const conditions = [
     { label: "New", value: "New" },
     { label: "Used - Good Condition", value: "Used - Good Condition" },
     { label: "Used - Poor Condition", value: "Used - Poor Condition" },
   ];
 
+  // Pick an image from the library
   const pickImage = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -99,10 +105,12 @@ export default function EditPostScreen() {
     }
   };
 
+  // Remove an image from the list
   const removeImage = (index: number) => {
     setImage((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // Update the product details
   const updateProduct = async () => {
     setErrorMessage("");
 
