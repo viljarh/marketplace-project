@@ -12,6 +12,7 @@ import {
   onAuthStateChangeListener,
 } from "../firebase/firebase";
 import { User } from "firebase/auth";
+import SettingsPage from "./settings";
 
 // Define the shape of the AuthContext
 interface AuthContextType {
@@ -115,3 +116,6 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     </AuthContext.Provider>
   );
 };
+
+export default SessionProvider;
+
