@@ -32,15 +32,21 @@ To get started with the project, follow these steps:
    ```sh
    git clone https://github.com/your-username/marketplace-app.git
    cd marketplace-app
+   ```
 2. Install dependencies:
-    ```sh
-    npm install
+
+   ```sh
+   npx expo install
+
+   ```
 
 3. Start the developement server:
-    ```sh
-    npm start 
+   ```sh
+   npx expo start
+   ```
 
 ## Usage
+
 - Sign Up / Sign In: Create a new account or sign in with existing credentials.
 - Create Post: Add a new product post with title, description, price, category, condition, and images.
 - Edit Post: Modify an existing product post.
