@@ -152,14 +152,14 @@ export default function Index() {
           ))}
         </View>
 
-        {/* Recommended Section */}
-        <View style={styles.recommendedHeader}>
-          <Text style={styles.recommendedTitle}>Recommended</Text>
+        {/* Recent Section */}
+        <View style={styles.recentHeader}>
+          <Text style={styles.recentTitle}>Recent</Text>
           <Text style={styles.seeAll}>See all</Text>
         </View>
 
-        {/* Scrollable Recommended Items */}
-        <ScrollView contentContainerStyle={styles.recommendedContainer}>
+        {/* Scrollable Recent Items */}
+        <ScrollView contentContainerStyle={styles.recentContainer}>
           {products.slice(0, 10).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
@@ -254,14 +254,14 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     fontSize: FONT_SIZES.small,
   },
-  recommendedHeader: {
+  recentHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: SPACING.medium,
     marginBottom: SPACING.small,
   },
-  recommendedTitle: {
+  recentTitle: {
     fontSize: FONT_SIZES.large,
     fontWeight: "bold",
     color: COLORS.textPrimary,
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES.small,
     color: COLORS.textSecondary,
   },
-  recommendedContainer: {
+  recentContainer: {
     paddingHorizontal: SPACING.medium,
     flexDirection: "row",
     flexWrap: "wrap",
