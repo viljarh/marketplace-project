@@ -162,9 +162,12 @@ export default function Index() {
 
           {/* Scrollable Recent Items */}
           <View style={styles.recentContainer}>
-            {products.slice(0, 10).map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {products
+              .slice(0, 10)
+              .reverse()
+              .map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
           </View>
         </ScrollView>
       </SafeAreaView>
