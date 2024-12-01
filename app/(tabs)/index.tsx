@@ -38,11 +38,11 @@ export default function Index() {
   const debouncedSearch = useCallback(
     debounce((query: string) => {
       const filteredData = products.filter((product) =>
-        product.title.toLowerCase().includes(query.toLowerCase()),
+        product.title.toLowerCase().includes(query.toLowerCase())
       );
       setFilteredProducts(filteredData);
     }, 300),
-    [products],
+    [products]
   );
 
   // Function to fetch products and categories from Firebase
@@ -64,7 +64,7 @@ export default function Index() {
   useFocusEffect(
     useCallback(() => {
       fetchData();
-    }, [fetchData]),
+    }, [fetchData])
   );
 
   // Update filtered products when search query changes
@@ -84,85 +84,88 @@ export default function Index() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>
-            Market<Text style={styles.headerTitleAccent}>Place</Text>
-          </Text>
-          <BellIcon
-            size={24}
-            color={COLORS.textSecondary}
-            onPress={() => router.push("/notifications")}
-          />
-        </View>
-
-        {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <View style={styles.searchBar}>
-            <MagnifyingGlassIcon size={20} color={COLORS.textSecondary} />
-            <TextInput
-              autoCapitalize="none"
-              style={styles.searchInput}
-              placeholder="Search"
-              placeholderTextColor={COLORS.textSecondary}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          {/* Header */}
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>
+              Market<Text style={styles.headerTitleAccent}>Place</Text>
+            </Text>
+            <BellIcon
+              size={24}
+              color={COLORS.textSecondary}
+              onPress={() => router.push("/notifications")}
             />
           </View>
-        </View>
 
-        {/* Filtered Products List */}
-        {searchQuery.length > 0 && filteredProducts.length > 0 && (
-          <View style={styles.filteredProductsContainer}>
-            {filteredProducts.map((product) => (
+          {/* Search Bar */}
+          <View style={styles.searchContainer}>
+            <View style={styles.searchBar}>
+              <MagnifyingGlassIcon size={20} color={COLORS.textSecondary} />
+              <TextInput
+                autoCapitalize="none"
+                style={styles.searchInput}
+                placeholder="Search"
+                placeholderTextColor={COLORS.textSecondary}
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+              />
+            </View>
+          </View>
+
+          {/* Filtered Products List */}
+          {searchQuery.length > 0 && filteredProducts.length > 0 && (
+            <View style={styles.filteredProductsContainer}>
+              {filteredProducts.map((product) => (
+                <TouchableOpacity
+                  key={product.id}
+                  style={styles.filteredProductItem}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/product/[id]",
+                      params: { id: product.id },
+                    })
+                  }
+                >
+                  <Text style={styles.filteredProductTitle}>
+                    {product.title}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+
+          {/* Categories */}
+          <View style={styles.categoriesContainer}>
+            {CATEGORIES.map((category) => (
               <TouchableOpacity
-                key={product.id}
-                style={styles.filteredProductItem}
+                key={category.id}
+                style={styles.categoryButton}
                 onPress={() =>
                   router.push({
-                    pathname: "/product/[id]",
-                    params: { id: product.id },
+                    pathname: "/category/[id]",
+                    params: { id: category.id },
                   })
                 }
               >
-                <Text style={styles.filteredProductTitle}>{product.title}</Text>
+                <View style={styles.categoryIconContainer}>
+                  <Text style={styles.categoryIcon}>{category.icon}</Text>
+                </View>
+                <Text style={styles.categoryName}>{category.name}</Text>
               </TouchableOpacity>
             ))}
           </View>
-        )}
 
-        {/* Categories */}
-        <View style={styles.categoriesContainer}>
-          {CATEGORIES.map((category) => (
-            <TouchableOpacity
-              key={category.id}
-              style={styles.categoryButton}
-              onPress={() =>
-                router.push({
-                  pathname: "/category/[id]",
-                  params: { id: category.id },
-                })
-              }
-            >
-              <View style={styles.categoryIconContainer}>
-                <Text style={styles.categoryIcon}>{category.icon}</Text>
-              </View>
-              <Text style={styles.categoryName}>{category.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+          {/* Recent Section */}
+          <View style={styles.recentHeader}>
+            <Text style={styles.recentTitle}>Recent</Text>
+          </View>
 
-        {/* Recent Section */}
-        <View style={styles.recentHeader}>
-          <Text style={styles.recentTitle}>Recent</Text>
-          <Text style={styles.seeAll}>See all</Text>
-        </View>
-
-        {/* Scrollable Recent Items */}
-        <ScrollView contentContainerStyle={styles.recentContainer}>
-          {products.slice(0, 10).map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {/* Scrollable Recent Items */}
+          <View style={styles.recentContainer}>
+            {products.slice(0, 10).map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </View>
         </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
@@ -178,6 +181,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
+  },
+  scrollContainer: {
+    paddingBottom: SPACING.medium,
   },
   header: {
     flexDirection: "row",
