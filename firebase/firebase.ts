@@ -50,12 +50,12 @@ const storage = getStorage(app);
 // Function to sign up a new user
 export const signUp = async (
   email: string,
-  password: string
+  password: string,
 ): Promise<User | null> => {
   const userCredential = await createUserWithEmailAndPassword(
     auth,
     email,
-    password
+    password,
   );
   const user = userCredential.user;
   const userRef = doc(db, "users", user.uid);
@@ -71,12 +71,12 @@ export const signUp = async (
 // Function to sign in an existing user
 export const signIn = async (
   email: string,
-  password: string
+  password: string,
 ): Promise<User | null> => {
   const userCredential = await signInWithEmailAndPassword(
     auth,
     email,
-    password
+    password,
   );
   return userCredential.user;
 };
@@ -88,7 +88,7 @@ export const signOut = async (): Promise<void> => {
 
 // Function to listen for authentication state changes
 export const onAuthStateChangeListener = (
-  callback: (user: User | null) => void
+  callback: (user: User | null) => void,
 ) => {
   return onAuthStateChanged(auth, callback);
 };
@@ -122,22 +122,40 @@ export async function fetchProductsById(productId: string) {
 
 // Function to fetch a user by their ID
 export async function fetchUserById(
-  userId: string
+  userId: string,
 ): Promise<{ email: string } | null> {
-  const userRef = doc(db, "users", userId);
-  const userSnap = await getDoc(userRef);
+  if (!userId) {
+    console.error("Invalid userId provided:", userId);
+    return null;
+  }
 
-  if (userSnap.exists()) {
-    const data = userSnap.data();
-    return {
-      email: data.email,
-    };
-  } else {
-    console.log("No such user");
+  try {
+    console.log("Attempting to fetch user with ID:", userId);
+
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      const data = userSnap.data();
+      console.log("User data retrieved successfully:", data);
+
+      if (!data.email) {
+        console.error("User document is missing an email field:", data);
+        return null;
+      }
+
+      return {
+        email: data.email,
+      };
+    } else {
+      console.warn("No such user found with ID:", userId);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error occurred while fetching user by ID:", error);
     return null;
   }
 }
-
 // Function to create a new product post
 export const handleCreatePost = async (
   title: string,
@@ -145,7 +163,7 @@ export const handleCreatePost = async (
   price: string,
   category: string,
   condition: string,
-  imageUrl: string | null
+  imageUrl: string | null,
 ): Promise<string | null> => {
   const currentUser = auth.currentUser;
 
@@ -189,7 +207,7 @@ export async function fetchCategories(): Promise<Category[]> {
 
 // Function to fetch products by category
 export async function fetchProductByCategory(
-  category: string
+  category: string,
 ): Promise<Product[]> {
   const productRef = collection(db, "products");
   const q = query(productRef, where("category", "==", category));
@@ -258,7 +276,7 @@ export const fetchFavorites = async (): Promise<Product[]> => {
 
   const favoritesQuery = query(
     collection(db, "favorites"),
-    where("userId", "==", currentUser.uid)
+    where("userId", "==", currentUser.uid),
   );
 
   const favoritesSnapshot = await getDocs(favoritesQuery);
@@ -269,7 +287,7 @@ export const fetchFavorites = async (): Promise<Product[]> => {
     const favoriteData = favoriteDoc.data() as FavoriteProduct;
 
     const productDoc = await getDoc(
-      doc(db, "products", favoriteData.productId)
+      doc(db, "products", favoriteData.productId),
     );
 
     if (productDoc.exists()) {
@@ -339,7 +357,7 @@ export const reauthenticateUser = async (currentPassword: string) => {
 
   const credential = EmailAuthProvider.credential(
     currentUser.email!,
-    currentPassword
+    currentPassword,
   );
 
   if (!currentUser.email) {
@@ -393,7 +411,7 @@ export async function fetchProductById(productId: string) {
 // Function to update a product post
 export async function handleUpdatePost(
   productId: string,
-  updatedFields: Partial<Product>
+  updatedFields: Partial<Product>,
 ) {
   try {
     const productRef = doc(db, "products", productId);
@@ -408,3 +426,4 @@ export async function handleUpdatePost(
 }
 
 export { db };
+
