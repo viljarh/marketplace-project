@@ -108,15 +108,17 @@ export default function MyPostsScreen() {
               <View key={post.id} style={styles.postWrapper}>
                 <ProductCard product={post} />
                 <View style={styles.iconsContainer}>
-                  <TouchableOpacity onPress={() => handleEditPost(post.id)}>
-                    <View style={styles.icon}>
-                      <PencilIcon size={18} />
-                    </View>
+                  <TouchableOpacity
+                    style={styles.editButton}
+                    onPress={() => handleEditPost(post.id)}
+                  >
+                    <PencilIcon size={18} color={COLORS.white} />
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => handleDeletePost(post.id)}>
-                    <View style={styles.icon}>
-                      <TrashIcon size={18} />
-                    </View>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => handleDeletePost(post.id)}
+                  >
+                    <TrashIcon size={18} color={COLORS.white} />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -161,20 +163,20 @@ const styles = StyleSheet.create({
   scrollContainer: {
     padding: SPACING.medium,
   },
+  postsContainer: {
 
-  postsContainer: {},
-
+  },
   postWrapper: {
     flexDirection: "column",
     alignItems: "center",
+    marginBottom: SPACING.medium,
   },
-
   iconsContainer: {
     flexDirection: "row",
-    gap: SPACING.small,
-    marginBottom: SPACING.small,
+    justifyContent: "space-between",
+    marginTop: SPACING.small,
+    width: "50%",
   },
-
   icon: {
     padding: SPACING.small,
     backgroundColor: COLORS.secondary,
@@ -189,5 +191,27 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: FONT_SIZES.medium,
     color: COLORS.textSecondary,
+  },
+  productCardImage: {
+    height: 220,
+    padding: SPACING.small,
+    borderRadius: BORDER_RADIUS.small,
+    backgroundColor: COLORS.accent, // Fallback color
+  },
+  editButton: {
+    flex: 1,
+    backgroundColor: COLORS.primary,
+    padding: SPACING.small,
+    borderRadius: BORDER_RADIUS.small,
+    marginRight: SPACING.small,
+    alignItems: "center",
+  },
+  deleteButton: {
+    flex: 1,
+    backgroundColor: COLORS.error,
+    padding: SPACING.small,
+    borderRadius: BORDER_RADIUS.small,
+    marginLeft: SPACING.small,
+    alignItems: "center",
   },
 });
