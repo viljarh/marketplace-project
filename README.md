@@ -39,16 +39,7 @@ To get started with the project, follow these steps:
    npx expo install
 
    ```
-3. Add .env file to root folder with this content
-   ```sh
-   EXPO_PUBLIC_FIREBASE_API_KEY=AIzaSyD91ADessOQ__nBZTU2-zvp58gf0jwEUTM
-   EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=marketplace-65a54.firebaseapp.com
-   EXPO_PUBLIC_FIREBASE_PROJECT_ID=marketplace-65a54
-   EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=marketplace-65a54.appspot.com
-   EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=40513142793
-   EXPO_PUBLIC_FIREBASE_APP_ID=1:40513142793:web:74d0abbdb0182cfcb9b8d8
-   ```
-4. Start the developement server:
+3. Start the developement server:
    ```sh
    npx expo start
    ```
