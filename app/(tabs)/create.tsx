@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.medium,
   },
   dropdownContainer: {
-    borderColor: COLORS.accent,
+    maxHeight: 300,
   },
   dropdownPlaceholder: {
     color: COLORS.textSecondary,
